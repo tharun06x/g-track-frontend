@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-TRACK - Refill History</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="theme.js"></script>
+  <!-- Runtime Configuration -->
+  <script src="runtime-config.js"></script>
+  <!-- Auth API Helper -->
+  <script src="auth-api.js"></script>
+</head>
+<body class="monitoring-page">
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="app-sidebar bg-white">
+      <div class="sidebar-logo" style="cursor: pointer;" onclick="window.location.href='dashboard.html'">
+         <div class="icon-circle bg-lime text-black" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+            <i class="ph-fill ph-fire"></i>
+         </div>
+         <div class="logo-text">
+            <h2>G-TRACK</h2>
+            <span>SMART MONITORING</span>
+         </div>
+      </div>
+
+      <nav class="sidebar-nav">
+         <a href="monitoring.html" class="nav-item"><i class="ph-fill ph-squares-four"></i> Dashboard</a>
+         <a href="report.html" class="nav-item"><i class="ph ph-chart-bar"></i> Reports</a>
+         <a href="refill-history.html" class="nav-item active bg-lime"><i class="ph ph-clock-counter-clockwise"></i> Refill History</a>
+         <a href="complaints.html" class="nav-item"><i class="ph ph-warning-circle"></i> Complaints</a>
+         <a href="settings.html" class="nav-item"><i class="ph ph-gear"></i> Settings</a>
+      </nav>
+
+      <div class="sidebar-bottom">
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      <header class="main-header" style="margin-bottom: 24px;">
+         <h1 style="font-size: 2rem;">Refill History</h1>
+      </header>
+      
+      <div class="card bg-white" style="padding: 32px">
+         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h2>Recent Transactions</h2>
+            <button class="pill-btn bg-black text-white" style="padding: 10px 20px; font-weight: 600;"><i class="ph ph-download-simple"></i> Download Logs</button>
+         </div>
+         
+         <table class="sensor-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+               <tr style="border-bottom: 1px solid var(--grey); text-align: left;">
+                  <th style="padding: 16px 8px; color: var(--text-secondary); font-weight: 500;">Date</th>
+                  <th style="padding: 16px 8px; color: var(--text-secondary); font-weight: 500;">Time</th>
+                  <th style="padding: 16px 8px; color: var(--text-secondary); font-weight: 500;">Amount Added</th>
+                  <th style="padding: 16px 8px; color: var(--text-secondary); font-weight: 500;">Delivered By</th>
+                  <th style="padding: 16px 8px; color: var(--text-secondary); font-weight: 500;">Status</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                  <td style="padding: 16px 8px; font-weight: 600;">Apr 06, 2026</td>
+                  <td style="padding: 16px 8px;">10:24 AM</td>
+                  <td style="padding: 16px 8px;"><span class="pill bg-lime text-black font-medium" style="padding: 4px 12px;">+14.2 kg</span></td>
+                  <td style="padding: 16px 8px;">BHARATH GAS</td>
+                  <td style="padding: 16px 8px;"><i class="ph-fill ph-check-circle text-lime" style="font-size: 1.2rem;"></i></td>
+               </tr>
+               <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                  <td style="padding: 16px 8px; font-weight: 600;">Mar 12, 2026</td>
+                  <td style="padding: 16px 8px;">02:15 PM</td>
+                  <td style="padding: 16px 8px;"><span class="pill bg-lime text-black font-medium" style="padding: 4px 12px;">+60.0 kg</span></td>
+                  <td style="padding: 16px 8px;">BHARATH GAS</td>
+                  <td style="padding: 16px 8px;"><i class="ph-fill ph-check-circle text-lime" style="font-size: 1.2rem;"></i></td>
+               </tr>
+               <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                  <td style="padding: 16px 8px; font-weight: 600;">Feb 28, 2026</td>
+                  <td style="padding: 16px 8px;">09:45 AM</td>
+                  <td style="padding: 16px 8px;"><span class="pill bg-lime text-black font-medium" style="padding: 4px 12px;">+14.5 kg</span></td>
+                  <td style="padding: 16px 8px;">BHARATH GAS</td>
+                  <td style="padding: 16px 8px;"><i class="ph-fill ph-check-circle text-lime" style="font-size: 1.2rem;"></i></td>
+               </tr>
+               <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                  <td style="padding: 16px 8px; font-weight: 600;">Jan 14, 2026</td>
+                  <td style="padding: 16px 8px;">11:30 AM</td>
+                  <td style="padding: 16px 8px;"><span class="pill bg-lime text-black font-medium" style="padding: 4px 12px;">+40.0 kg</span></td>
+                  <td style="padding: 16px 8px;">BHARATH GAS</td>
+                  <td style="padding: 16px 8px;"><i class="ph-fill ph-check-circle text-lime" style="font-size: 1.2rem;"></i></td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- Refill History Script -->
+  <script src="refill-history.js"></script>
+</body>
+</html>

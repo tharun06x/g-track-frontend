@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-TRACK - Distributor Requests</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: linear-gradient(140deg, #0f0f0f, #1b2520);
+      color: #fff;
+      font-family: Inter, sans-serif;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: rgba(16, 16, 16, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--lime);
+      color: #111;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 0.92rem;
+    }
+
+    th, td {
+      border-bottom: 1px solid #2b2b2b;
+      text-align: left;
+      padding: 10px;
+      vertical-align: top;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-reject {
+      background: #c14a4a;
+      color: #fff;
+    }
+
+    .password-input {
+      width: 150px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #222;
+      color: #fff;
+      padding: 6px;
+    }
+
+    .status {
+      min-height: 20px;
+      color: #d3d3d3;
+      margin-top: 10px;
+    }
+
+    .empty {
+      margin-top: 18px;
+      color: #b6b6b6;
+    }
+
+    a {
+      color: var(--lime);
+      text-decoration: none;
+    }
+
+    @media (max-width: 900px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        border: 1px solid #2b2b2b;
+        border-radius: 12px;
+        margin-bottom: 10px;
+      }
+
+      td {
+        border-bottom: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div>
+        <h1 style="margin: 0;">Pending Distributor Requests</h1>
+        <p style="margin: 4px 0 0; color: #b6b6b6;">Approve requires password. Reject can include comment.</p>
+      </div>
+      <div>
+        <button id="refreshBtn" type="button">Refresh</button>
+        <button id="logoutBtn" type="button" class="btn-reject">Logout</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 8px;"><a href="admin-login.html">Back to Admin Login</a></div>
+
+    <div id="emptyState" class="empty" style="display: none;">No pending requests found.</div>
+    <table id="requestsTable" style="display: none;">
+      <thead>
+        <tr>
+          <th>Request</th>
+          <th>Contact</th>
+          <th>Location</th>
+          <th>Reason</th>
+          <th>Requested</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="requestsBody"></tbody>
+    </table>
+    <p id="adminStatus" class="status"></p>
+  </div>
+
+  <script src="runtime-config.js"></script>
+  <script src="auth-api.js"></script>
+  <script>
+    const statusEl = document.getElementById('adminStatus');
+    const table = document.getElementById('requestsTable');
+    const body = document.getElementById('requestsBody');
+    const emptyState = document.getElementById('emptyState');
+
+    const auth = window.GTrackApi.readAuth();
+    if (!auth || auth.role !== 'admin' || !auth.token) {
+      window.location.href = 'admin-login.html';
+    }
+
+    async function loadPendingRequests() {
+      statusEl.textContent = 'Loading pending requests...';
+      statusEl.style.color = '#d3d3d3';
+
+      try {
+        const data = await window.GTrackApi.request('/api/v1/admin/distributor-requests/pending', {
+          method: 'GET',
+          token: auth.token,
+        });
+
+        const requests = Array.isArray(data.requests) ? data.requests : [];
+        body.innerHTML = '';
+
+        if (requests.length === 0) {
+          table.style.display = 'none';
+          emptyState.style.display = 'block';
+          statusEl.textContent = 'No pending requests.';
+          return;
+        }
+
+        table.style.display = 'table';
+        emptyState.style.display = 'none';
+
+        requests.forEach((item) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>${item.request_id}</strong><br>${item.company_name}</td>
+            <td>${item.name}<br>${item.email}<br>${item.phone_no}</td>
+            <td>${item.state}, ${item.district}</td>
+            <td>${item.reason || '-'}</td>
+            <td>${new Date(item.requested_at).toLocaleString()}</td>
+            <td>
+              <div class="row-actions">
+                <input class="password-input" type="password" placeholder="Password for approve" id="pwd-${item.request_id}">
+                <button type="button" data-action="approve" data-id="${item.request_id}">Approve</button>
+                <button type="button" class="btn-reject" data-action="reject" data-id="${item.request_id}">Reject</button>
+              </div>
+            </td>
+          `;
+          body.appendChild(tr);
+        });
+
+        statusEl.textContent = `${requests.length} pending request(s).`;
+        statusEl.style.color = '#d3d3d3';
+      } catch (error) {
+        table.style.display = 'none';
+        emptyState.style.display = 'block';
+        statusEl.textContent = error.message;
+        statusEl.style.color = '#ff7f7f';
+      }
+    }
+
+    body.addEventListener('click', async (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLButtonElement)) {
+        return;
+      }
+
+      const action = target.getAttribute('data-action');
+      const requestId = target.getAttribute('data-id');
+      if (!action || !requestId) {
+        return;
+      }
+
+      const comment = prompt('Optional review comment:') || null;
+      const payload = {
+        status: action === 'approve' ? 'approved' : 'rejected',
+        review_comment: comment,
+      };
+
+      if (action === 'approve') {
+        const pwdInput = document.getElementById(`pwd-${requestId}`);
+        const password = pwdInput ? pwdInput.value.trim() : '';
+        if (!password) {
+          statusEl.textContent = 'Approval requires password.';
+          statusEl.style.color = '#ff7f7f';
+          return;
+        }
+        payload.password = password;
+      }
+
+      statusEl.textContent = `${action === 'approve' ? 'Approving' : 'Rejecting'} ${requestId}...`;
+      statusEl.style.color = '#d3d3d3';
+
+      try {
+        const data = await window.GTrackApi.request(`/api/v1/admin/distributor-requests/${requestId}`, {
+          method: 'PATCH',
+          token: auth.token,
+          body: payload,
+        });
+        statusEl.textContent = data.message;
+        statusEl.style.color = 'var(--lime)';
+        await loadPendingRequests();
+      } catch (error) {
+        statusEl.textContent = error.message;
+        statusEl.style.color = '#ff7f7f';
+      }
+    });
+
+    document.getElementById('refreshBtn').addEventListener('click', loadPendingRequests);
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      window.GTrackApi.clearAuth();
+      window.location.href = 'admin-login.html';
+    });
+
+    loadPendingRequests();
+  </script>
+</body>
+</html>

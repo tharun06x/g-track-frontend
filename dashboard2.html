@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-TRACK - Detail Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body class="detail-page">
+  <div class="dashboard-container sub-dashboard">
+
+    <!-- Back button matching the circle icons from the front page -->
+    <div class="sub-nav">
+      <button class="circle-btn bg-white" style="box-shadow: 0 4px 12px rgba(0,0,0,0.05);"
+        onclick="window.location.href='monitoring.html'" title="Back to Main Dashboard">
+        <i class="ph ph-arrow-u-up-left"></i>
+      </button>
+    </div>
+
+    <!-- Row 1: 3 metric cards -->
+    <div class="metrics-row">
+      <div class="card metric-card bg-white">
+        <div class="metric-header text-secondary">
+          <i class="ph ph-file-text"></i> Completed tasks
+          <button class="icon-btn-minimal ml-auto"><i class="ph ph-dots-three"></i></button>
+        </div>
+        <div class="metric-value">85%</div>
+      </div>
+      <div class="card metric-card bg-lime">
+        <div class="metric-header text-black font-medium">
+          <i class="ph-fill ph-star"></i> Customer rating
+        </div>
+        <div class="metric-value text-black">4.8</div>
+      </div>
+      <div class="card metric-card bg-black text-white">
+        <div class="metric-header text-white-70">
+          <i class="ph ph-clock"></i> Avg. time
+          <div class="pill bg-white text-black ml-auto font-medium">
+            <i class="ph ph-arrow-up"></i> 3%
+          </div>
+        </div>
+        <div class="metric-value">3.5h</div>
+      </div>
+    </div>
+
+    <!-- Row 2: Gas Monitoring Redesign -->
+    <div class="middle-row" style="grid-template-columns: 1fr;">
+
+      <div class="card new-gas-card bg-lime text-black"
+        style="min-height: 320px; display: flex; position: relative; overflow: hidden; padding: 40px;">
+
+        <!-- Top Left Icon -->
+        <button class="circle-btn bg-white"
+          style="position: absolute; top: 32px; left: 32px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); width: 64px; height: 64px; cursor: pointer;">
+          <i class="ph ph-trend-up" style="font-size: 1.8rem; font-weight: 600;"></i>
+        </button>
+
+        <!-- Bottom Left Text -->
+        <div style="position: absolute; bottom: 40px; left: 32px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 2.5rem; font-weight: 600; letter-spacing: -0.02em;">14%</span>
+            <button class="circle-btn bg-white"
+              style="width: 36px; height: 36px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+              <i class="ph ph-arrow-up-right" style="font-size: 1.1rem; font-weight: 600;"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Side Gauge -->
+        <div class="gauge-wrapper"
+          style="margin-left: auto; width: 60%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+
+          <svg viewBox="0 0 200 130" style="width: 100%; max-width: 400px; overflow: visible;">
+            <defs>
+              <pattern id="stripePattern" width="4" height="4" patternTransform="rotate(45)"
+                patternUnits="userSpaceOnUse">
+                <line x1="0" y1="0" x2="0" y2="4" stroke="var(--black)" stroke-width="1.2" opacity="0.4" />
+              </pattern>
+            </defs>
+
+            <!-- Striped background arc -->
+            <path d="M 20 110 A 80 80 0 0 1 180 110" fill="none" stroke="url(#stripePattern)" stroke-width="20"
+              stroke-linecap="round" />
+
+            <!-- Foreground Black arc -->
+            <!-- Total length ~ 251.3 -->
+            <path id="gauge-fill2" d="M 20 110 A 80 80 0 0 1 180 110" fill="none" stroke="var(--black)"
+              stroke-width="20" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="251.3" />
+
+            <!-- Purple dot with arrow pointer following the arc -->
+            <g transform="translate(100, 85)">
+              <g id="gauge-pointer">
+                <circle cx="0" cy="0" r="5" fill="#a881ff" stroke="var(--black)" stroke-width="2" />
+                <polygon points="-12,0 -4,-4 -4,4" fill="var(--black)" />
+              </g>
+            </g>
+          </svg>
+
+          <!-- Big Number inside/below gauge -->
+          <div id="gas-weight-value2"
+            style="font-size: 3.8rem; font-weight: 600; letter-spacing: -0.04em; margin-top: -30px; z-index: 2;">139.0
+            kg</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Row 3: Budget & Activity -->
+    <div class="bottom-row">
+      <!-- Budget -->
+      <div class="card budget-card bg-white">
+        <div class="card-title-row">
+          <span class="text-secondary font-medium">Budget usage</span>
+          <button class="circle-btn small outline bg-hover ml-auto"><i class="ph ph-wallet"></i></button>
+        </div>
+        <div class="budget-value">$50,734</div>
+
+        <div class="budget-labels-top">
+          <span>50%</span>
+          <span>30%</span>
+          <span>20%</span>
+        </div>
+        <div class="budget-segment-bar">
+          <div class="segment bg-grey-dark" style="flex: 5;"></div>
+          <div class="segment bg-grey" style="flex: 3;"></div>
+          <div class="segment bg-black" style="flex: 2;"></div>
+        </div>
+
+        <div class="budget-legend">
+          <span class="legend-item">
+            <div class="dot bg-grey-dark"></div> Unused
+          </span>
+          <span class="legend-item">
+            <div class="dot bg-grey"></div> Used
+          </span>
+          <span class="legend-item">
+            <div class="dot bg-black"></div> Reserved
+          </span>
+        </div>
+      </div>
+
+      <!-- Activity -->
+      <div class="card activity-card bg-white">
+        <div class="card-title-row">
+          <h3 style="display: flex; align-items: center; gap: 12px;">Activity <span
+              class="pill bg-lime text-black font-medium" style="font-size: 0.8rem;"><i class="ph ph-arrow-up"></i>
+              5%</span></h3>
+          <div class="dropdown-pill outline ml-auto">
+            <i class="ph ph-users"></i> QA team <i class="ph ph-caret-down"></i>
+          </div>
+        </div>
+
+        <div class="activity-chart">
+          <div class="activity-col">
+            <div class="act-bar bg-grey" style="height: 60%;"></div><span class="act-day">Mon</span>
+          </div>
+          <div class="activity-col">
+            <div class="act-bar bg-grey" style="height: 30%;"></div><span class="act-day">Tue</span>
+          </div>
+          <div class="activity-col">
+            <div class="act-bar bg-grey" style="height: 40%;"></div><span class="act-day">Wed</span>
+          </div>
+          <div class="activity-col active-col">
+            <div class="act-badge label-badge">18</div>
+            <div class="act-bar bg-lime" style="height: 90%;"></div><span
+              class="act-day text-black font-medium">Thu</span>
+          </div>
+          <div class="activity-col">
+            <div class="act-bar bg-grey" style="height: 50%;"></div><span class="act-day">Fri</span>
+          </div>
+          <div class="activity-col">
+            <div class="act-bar bg-grey" style="height: 65%;"></div><span class="act-day">Sat</span>
+          </div>
+          <div class="activity-col">
+            <div class="act-bar bg-grey" style="height: 35%;"></div><span class="act-day">Sun</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="theme.js"></script>
+  <script src="script2.js"></script>
+</body>
+
+</html>

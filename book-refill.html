@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-TRACK - Book Refill</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="theme.js"></script>
+  <script src="runtime-config.js"></script>
+  <script src="auth-api.js"></script>
+</head>
+<body class="monitoring-page">
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="app-sidebar bg-white">
+      <div class="sidebar-logo" style="cursor: pointer;" onclick="window.location.href='dashboard.html'">
+         <div class="icon-circle bg-lime text-black" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+            <i class="ph-fill ph-fire"></i>
+         </div>
+         <div class="logo-text">
+            <h2>G-TRACK</h2>
+            <span>SMART MONITORING</span>
+         </div>
+      </div>
+
+      <nav class="sidebar-nav">
+         <a href="monitoring.html" class="nav-item"><i class="ph-fill ph-squares-four"></i> Dashboard</a>
+         <a href="report.html" class="nav-item"><i class="ph ph-chart-bar"></i> Reports</a>
+         <a href="refill-history.html" class="nav-item"><i class="ph ph-clock-counter-clockwise"></i> Refill History</a>
+         <a href="complaints.html" class="nav-item"><i class="ph ph-warning-circle"></i> Complaints</a>
+         <a href="settings.html" class="nav-item"><i class="ph ph-gear"></i> Settings</a>
+      </nav>
+
+      <div class="sidebar-bottom">
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      <header class="main-header" style="margin-bottom: 24px;">
+         <h1 style="font-size: 2rem;">Book Cylinder Refill</h1>
+      </header>
+      
+      <div class="complaints-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+         <!-- Booking Form -->
+         <div class="card bg-white" style="padding: 32px">
+            <h2 style="margin-bottom: 24px;">Order Details</h2>
+            <form id="booking-form" style="display: flex; flex-direction: column; gap: 20px;">
+               
+               <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                  <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                     <label style="font-weight: 500;">Gas Agency</label>
+                     <select id="gas-agency" class="form-input" style="padding: 12px; border: 1px solid var(--grey); border-radius: 8px; background: var(--white); color: var(--black);">
+                        <option>BHARATH GAS</option>
+                        <option>HP GAS</option>
+                        <option>INDANE GAS</option>
+                     </select>
+                  </div>
+                  <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                     <label style="font-weight: 500;">Cylinder Weight</label>
+                     <select id="cylinder-weight" class="form-input" style="padding: 12px; border: 1px solid var(--grey); border-radius: 8px; background: var(--white); color: var(--black);">
+                        <option>14.2 kg (Domestic)</option>
+                        <option>19.0 kg (Commercial)</option>
+                        <option>47.5 kg (Industrial)</option>
+                     </select>
+                  </div>
+               </div>
+               
+               <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                  <label style="font-weight: 500;">Delivery Preference</label>
+                  <div style="display: flex; gap: 16px;">
+                     <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="radio" id="delivery-standard" name="delivery-pref" value="standard" checked> Standard (2-3 Days)
+                     </label>
+                     <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="radio" id="delivery-urgent" name="delivery-pref" value="urgent"> Urgent (Next Day)
+                     </label>
+                  </div>
+               </div>
+
+               <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                  <label style="font-weight: 500;">Delivery Address</label>
+                  <textarea id="delivery-address" class="form-input" rows="3" style="padding: 12px; border: 1px solid var(--grey); border-radius: 8px; resize: vertical; background: transparent; color: var(--black);"></textarea>
+               </div>
+               
+               <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                  <label style="font-weight: 500;">Special Instructions (Optional)</label>
+                  <input type="text" id="special-instructions" class="form-input" placeholder="e.g. Ring the bell twice, leave at front door..." style="padding: 12px; border: 1px solid var(--grey); border-radius: 8px; background: transparent; color: var(--black);">
+               </div>
+               
+               <button type="button" data-action="confirm-booking" class="pill-btn bg-lime text-black" style="align-self: flex-start; padding: 14px 32px; font-weight: 600; font-size: 1rem; margin-top: 8px; border: none; cursor: pointer; border-radius: 100px;">Confirm Booking</button>
+            </form>
+         </div>
+
+         <!-- Status / Side Info -->
+         <div style="display: flex; flex-direction: column; gap: 24px;">
+             <div class="card bg-black text-white" style="padding: 32px">
+                <h3 style="margin-bottom: 16px; font-weight: 500;">Current Level</h3>
+                <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 24px;">
+                   <span id="current-level-value" style="font-size: 3.5rem; font-weight: 600; line-height: 1; letter-spacing: -0.02em;">--</span>
+                </div>
+                <div class="progress-bar-bg" style="height: 12px; border-radius: 12px; background: rgba(255,255,255,0.2); width: 100%;">
+                   <div id="current-level-progress" class="progress-bar-fill" style="width: 0%; background: #ff3a3a; border-radius: 12px; height: 100%;"></div>
+                </div>
+                <p id="current-level-warning" style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-top: 24px; line-height: 1.5;">Loading gas level...</p>
+             </div>
+
+             <div class="card bg-white" style="padding: 32px">
+                <h3 style="margin-bottom: 16px; font-weight: 600; font-size: 1rem;">Recent Refill Requests</h3>
+                <div id="refill-history-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto;">
+                  <div style="padding: 20px; text-align: center; color: var(--text-secondary); font-size: 0.9rem;">Loading history...</div>
+                </div>
+             </div>
+
+             <div class="card bg-white" style="padding: 32px">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                   <div class="icon-circle bg-grey text-black" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="ph-bold ph-shield-check"></i></div>
+                   <h3 style="margin: 0; font-size: 1.1rem; font-weight: 600;">Safe Booking</h3>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0; line-height: 1.5;">Payment will be made securely. G-TRACK guarantees authorized agency deliveries only.</p>
+             </div>
+         </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="book-refill.js"></script>
+</body>
+</html>

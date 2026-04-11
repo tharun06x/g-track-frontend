@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-TRACK - Reports</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="theme.js"></script>
+  <script src="runtime-config.js"></script>
+  <script src="auth-api.js"></script>
+</head>
+<body class="monitoring-page">
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="app-sidebar bg-white">
+      <div class="sidebar-logo" style="cursor: pointer;" onclick="window.location.href='dashboard.html'">
+         <div class="icon-circle bg-lime text-black" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+            <i class="ph-fill ph-fire"></i>
+         </div>
+         <div class="logo-text">
+            <h2>G-TRACK</h2>
+            <span>SMART MONITORING</span>
+         </div>
+      </div>
+
+      <nav class="sidebar-nav">
+         <a href="monitoring.html" class="nav-item"><i class="ph-fill ph-squares-four"></i> Dashboard</a>
+         <a href="#" class="nav-item active bg-lime"><i class="ph ph-chart-bar"></i> Reports</a>
+         <a href="refill-history.html" class="nav-item"><i class="ph ph-clock-counter-clockwise"></i> Refill History</a>
+         <a href="complaints.html" class="nav-item"><i class="ph ph-warning-circle"></i> Complaints</a>
+         <a href="settings.html" class="nav-item"><i class="ph ph-gear"></i> Settings</a>
+      </nav>
+
+      <div class="sidebar-bottom">
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      <header class="main-header" style="margin-bottom: 24px;">
+         <h1 style="font-size: 2rem;">Overview</h1>
+
+      </header>
+
+      <!-- Top Banner (Grainish Inspired) -->
+      <div class="report-banner">
+         <h1>Report Overview</h1>
+         <div class="report-stats">
+            <div class="stat-item">
+               <span class="stat-label">TOTAL DELIVERIES</span>
+               <span id="stat-total-deliveries" class="stat-value">--</span>
+            </div>
+            <div class="stat-item">
+               <span class="stat-label">ACTIVE SENSORS</span>
+               <span id="stat-active-sensors" class="stat-value">--</span>
+            </div>
+            <div class="stat-item">
+               <span class="stat-label">TOTAL GAS USAGE</span>
+               <span id="stat-total-gas-usage" class="stat-value">-- kg</span>
+            </div>
+         </div>
+
+         <!-- Abstract Graphic Overlay instead of Wheat -->
+         <svg class="banner-graphic" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="80" fill="none" stroke="var(--black)" stroke-width="2" stroke-dasharray="4 8" />
+            <circle cx="100" cy="100" r="60" fill="none" stroke="var(--black)" stroke-width="1" />
+            <circle cx="100" cy="100" r="40" fill="none" stroke="var(--black)" stroke-width="4" stroke-dasharray="10 20" />
+            <path d="M100 20 L100 180 M20 100 L180 100" stroke="var(--black)" stroke-width="1" stroke-dasharray="4 4" />
+         </svg>
+      </div>
+
+      <!-- Report Grid Layout -->
+      <div class="report-grid">
+         
+         <!-- Chart Card (Dark) -->
+         <div class="chart-card">
+            <h3 class="section-title">Delivery Analytics</h3>
+            <div style="position: absolute; top: 100px; left: 45%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; z-index: 10;">
+               <div id="analytics-avg" style="background: var(--white); color: var(--black); padding: 4px 12px; border-radius: 100px; font-size: 0.8rem; font-weight: 600; transition: all 0.3s;">28 min/avg</div>
+               <div style="width: 2px; height: 30px; background: rgba(255,255,255,0.5);"></div>
+               <div style="width: 10px; height: 10px; background: var(--white); border-radius: 50%; box-shadow: 0 0 0 4px rgba(255,255,255,0.2);"></div>
+            </div>
+
+            <svg viewBox="0 0 1000 200" style="width: 100%; height: 160px; margin-top: 16px; overflow: visible;" preserveAspectRatio="none">
+               <defs>
+                 <linearGradient id="glowG" x1="0" y1="0" x2="1" y2="0">
+                     <stop offset="0%" stop-color="#fff" opacity="0.2"/>
+                     <stop offset="50%" stop-color="var(--lime)" />
+                     <stop offset="100%" stop-color="#fff" opacity="0.2"/>
+                 </linearGradient>
+                 <linearGradient id="areaG" x1="0" y1="0" x2="0" y2="1">
+                     <stop offset="0%" stop-color="var(--lime)" opacity="0.2" />
+                     <stop offset="100%" stop-color="var(--lime)" opacity="0" />
+                 </linearGradient>
+               </defs>
+               <!-- Main Data Line -->
+               <path id="analytics-line" d="M0,120 C150,130 250,50 350,100 C465,150 480,80 600,80 C750,80 800,90 900,40 C950,20 1000,80 1000,80" fill="none" stroke="url(#glowG)" stroke-width="4" stroke-linecap="round" style="transition: d 0.6s cubic-bezier(0.4, 0, 0.2, 1);"/>
+               <!-- Main Data Area -->
+               <path id="analytics-area" d="M0,120 C150,130 250,50 350,100 C465,150 480,80 600,80 C750,80 800,90 900,40 C950,20 1000,80 1000,80 L1000,200 L0,200 Z" fill="url(#areaG)" style="transition: d 0.6s cubic-bezier(0.4, 0, 0.2, 1);"/>
+               <!-- Background Dashed Line -->
+               <path d="M0,80 C150,180 350,80 450,90 C550,100 600,30 750,130 C850,200 950,130 1000,140" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2" stroke-dasharray="6,8" stroke-linecap="round"/>
+            </svg>
+
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 16px;">
+               <span>0 days</span>
+               <span>14 days</span>
+               <span>30 days</span>
+            </div>
+         </div>
+
+         <!-- Critical Alerts Card -->
+         <div class="alerts-card">
+            <h3 class="section-title">Critical Alerts</h3>
+            <div id="alerts-list">
+               <!-- Alerts loaded from API -->
+            </div>
+         </div>
+
+         <!-- Activity Tall Card -> Calendar -->
+         <div class="activity-tall card widget-calendar bg-black text-white" style="padding: 32px; background: var(--black);">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px;">
+               <h3 class="section-title" style="margin-bottom: 0;">Activity Overview</h3>
+            </div>
+
+            <div class="cal-grid">
+               <div class="day-name">Mo</div>
+               <div class="day-name">Tu</div>
+               <div class="day-name">We</div>
+               <div class="day-name">Th</div>
+               <div class="day-name">Fr</div>
+               <div class="day-name">Sa</div>
+               <div class="day-name">Su</div>
+               
+               <div class="cal-cell old-month">30<div class="cal-dots"><span class="dot-blue"></span><span class="dot-red"></span></div></div>
+               <div class="cal-cell">1<div class="cal-dots"><span class="dot-red"></span></div></div>
+               <div class="cal-cell">2<div class="cal-dots"><span class="dot-blue"></span><span class="dot-red"></span></div></div>
+               <div class="cal-cell">3<div class="cal-dots"><span class="dot-blue"></span><span class="dot-red"></span><span class="dot-red"></span></div></div>
+               <div class="cal-cell">4<div class="cal-dots"><span class="dot-blue"></span><span class="dot-red"></span><span class="dot-red"></span></div></div>
+               <div class="cal-cell">5<div class="cal-dots"><span class="dot-red"></span><span class="dot-red"></span></div></div>
+               <div class="cal-cell">6<div class="cal-dots"><span class="dot-red"></span></div></div>
+               
+               <div class="cal-cell">7<div class="cal-dots"><span class="dot-blue"></span><span class="dot-red"></span></div></div>
+               <div class="cal-cell">8<div class="cal-dots"><span class="dot-blue"></span><span class="dot-red"></span><span class="dot-red"></span></div></div>
+               <div class="cal-cell">9<div class="cal-dots"><span class="dot-blue"></span><span class="dot-red"></span></div></div>
+               <div class="cal-cell">10<div class="cal-dots"><span class="dot-red"></span></div></div>
+               <div class="cal-cell">11<div class="cal-dots"><span class="dot-blue"></span><span class="dot-red"></span></div></div>
+               <div class="cal-cell">12<div class="cal-dots"><span class="dot-blue"></span><span class="dot-red"></span><span class="dot-red"></span></div></div>
+               <div class="cal-cell">13<div class="cal-dots"><span class="dot-blue"></span><span class="dot-red"></span></div></div>
+               
+               <div class="cal-cell">14<div class="cal-dots"><span class="dot-blue"></span><span class="dot-red"></span><span class="dot-red"></span></div></div>
+               <div class="cal-cell">15<div class="cal-dots"><span class="dot-red"></span><span class="dot-red"></span></div></div>
+               <div class="cal-cell">16<div class="cal-dots"><span class="dot-blue"></span><span class="dot-red"></span></div></div>
+               <div class="cal-cell active-date">17</div>
+               <div class="cal-cell">18</div>
+               <div class="cal-cell">19</div>
+               <div class="cal-cell">20</div>
+               
+               <div class="cal-cell">21</div>
+               <div class="cal-cell">22</div>
+               <div class="cal-cell">23</div>
+               <div class="cal-cell">24</div>
+               <div class="cal-cell">25</div>
+               <div class="cal-cell">26</div>
+               <div class="cal-cell">27</div>
+               
+               <div class="cal-cell">28</div>
+               <div class="cal-cell">29</div>
+               <div class="cal-cell">30</div>
+               <div class="cal-cell">31</div>
+               <div class="cal-cell old-month">1</div>
+               <div class="cal-cell old-month">2</div>
+               <div class="cal-cell old-month">3</div>
+            </div>
+
+            <div class="cal-stats" style="margin-top: 24px;">
+               <div class="cal-stat-item">
+                  <span class="cal-stat-label">Active time</span>
+                  <span class="cal-stat-val">4 h 32 m</span>
+               </div>
+               <div class="cal-stat-item">
+                  <span class="cal-stat-label">Recovery avg.</span>
+                  <span class="cal-stat-val">17 hours</span>
+               </div>
+               <div class="cal-stat-item">
+                  <span class="cal-stat-label">Best day</span>
+                  <span class="cal-stat-val">Monday</span>
+               </div>
+            </div>
+
+            <!-- Timing Heatmap -->
+            <div style="margin-top: 32px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 24px;">
+               <h4 class="heatmap-title">Activity Intensity</h4>
+               <div class="heat-grid">
+                  <!-- Row 1: Morning -->
+                  <div class="heat-label">Morning</div>
+                  <div class="heat-block" style="opacity: 0.15;" title="11:45 AM"></div>
+                  <div class="heat-block" style="opacity: 0.2;" title="08:30 AM"></div>
+                  <div class="heat-block" style="opacity: 0.4;" title="10:15 AM"></div>
+                  <div class="heat-block" style="opacity: 0.2;" title="09:00 AM"></div>
+                  <div class="heat-block" style="opacity: 0.15;" title="11:10 AM"></div>
+                  <div class="heat-block" style="opacity: 0.1;" title="08:50 AM"></div>
+                  <div class="heat-block" style="opacity: 0.1;" title="09:30 AM"></div>
+
+                  <!-- Row 2: Afternoon -->
+                  <div class="heat-label">Afternoon</div>
+                  <div class="heat-block" style="opacity: 0.4;" title="01:15 PM"></div>
+                  <div class="heat-block" style="opacity: 0.6;" title="02:30 PM"></div>
+                  <div class="heat-block" style="opacity: 0.4;" title="12:45 PM"></div>
+                  <div class="heat-block" style="opacity: 0.3;" title="03:20 PM"></div>
+                  <div class="heat-block" style="opacity: 0.4;" title="01:50 PM"></div>
+                  <div class="heat-block" style="opacity: 0.2;" title="04:10 PM"></div>
+                  <div class="heat-block" style="opacity: 0.2;" title="02:00 PM"></div>
+
+                  <!-- Row 3: Evening -->
+                  <div class="heat-label">Evening</div>
+                  <div class="heat-block" style="opacity: 0.6;" title="06:30 PM"></div>
+                  <div class="heat-block" style="opacity: 0.8;" title="07:15 PM"></div>
+                  <div class="heat-block" style="opacity: 0.9;" title="05:45 PM"></div>
+                  <div class="heat-block" style="opacity: 0.8;" title="06:50 PM"></div>
+                  <div class="heat-block" style="opacity: 0.7;" title="08:20 PM"></div>
+                  <div class="heat-block" style="opacity: 0.3;" title="07:00 PM"></div>
+                  <div class="heat-block" style="opacity: 0.4;" title="06:10 PM"></div>
+
+                  <!-- Row 4: Night -->
+                  <div class="heat-label">Night</div>
+                  <div class="heat-block" style="opacity: 0.8;" title="10:15 PM"></div>
+                  <div class="heat-block" style="opacity: 1.0;" title="09:45 PM"></div>
+                  <div class="heat-block" style="opacity: 0.9;" title="11:30 PM"></div>
+                  <div class="heat-block" style="opacity: 0.8;" title="10:05 PM"></div>
+                  <div class="heat-block" style="opacity: 0.9;" title="09:15 PM"></div>
+                  <div class="heat-block" style="opacity: 0.5;" title="11:00 PM"></div>
+                  <div class="heat-block" style="opacity: 0.6;" title="10:45 PM"></div>
+
+                  <!-- Axis Labels -->
+                  <div></div>
+                  <div class="heat-day" style="margin-top: 8px;">Mo</div>
+                  <div class="heat-day" style="margin-top: 8px;">Tu</div>
+                  <div class="heat-day" style="margin-top: 8px;">We</div>
+                  <div class="heat-day" style="margin-top: 8px;">Th</div>
+                  <div class="heat-day" style="margin-top: 8px;">Fr</div>
+                  <div class="heat-day" style="margin-top: 8px;">Sa</div>
+                  <div class="heat-day" style="margin-top: 8px;">Su</div>
+               </div>
+            </div>
+         </div>
+
+         <!-- Active Sensor Status Table Card -->
+         <div class="status-table-card">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px;">
+               <h3 class="section-title" style="margin-bottom: 0;">Active Sensor Status</h3>
+               <span style="font-size: 0.85rem; font-weight: 600; cursor: pointer;">Explore all</span>
+            </div>
+
+            <table class="sensor-table">
+               <thead>
+                  <tr>
+                     <th>№</th>
+                     <th>Health</th>
+                     <th>Load (%)</th>
+                     <th>Signal</th>
+                     <th>ETA</th>
+                     <th></th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><strong>№1</strong></td>
+                     <td><div class="radial-sm" style="border-right-color: var(--lime); border-top-color: var(--lime);">96%</div></td>
+                     <td><div style="display: flex; align-items: center; gap: 8px;"><i class="ph-fill ph-drop"></i> 80%</div></td>
+                     <td><div style="display: flex; align-items: center; gap: 8px;"><i class="ph-bold ph-wifi-high"></i> Strong</div></td>
+                     <td><div style="display: flex; align-items: center; gap: 8px;"><i class="ph-bold ph-clock"></i> 14 mins</div></td>
+                     <td><button class="pill-btn bg-lime text-black" style="padding: 6px 16px; font-size: 0.8rem;">Details</button></td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+
+         <!-- Yearly Gas Usage Trend Card -->
+         <div class="usage-trend-card card text-primary" style="grid-column: 1 / span 3; padding: 32px; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px;">
+               <h3 class="section-title" style="margin-bottom: 0;">Yearly Gas Usage Trend</h3>
+               <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">2026</span>
+            </div>
+            
+            <div class="trend-chart-container" id="yearly-trend-chart" style="display: flex; justify-content: space-between; align-items: flex-end; height: 220px; width: 100%; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 8px; position: relative;">
+               <!-- Y Axis placeholders -->
+               <div style="position: absolute; left: 0; bottom: 8px; top: 0; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; color: var(--text-secondary); font-size: 0.75rem; pointer-events: none; z-index: 0;">
+                  <span>100%</span>
+                  <span>50%</span>
+                  <span>0%</span>
+               </div>
+               
+               <!-- Horizontal Grid Lines -->
+               <div style="position: absolute; left: 30px; right: 0; top: 0; height: 1px; border-top: 1px dashed rgba(0,0,0,0.05); z-index: 0;"></div>
+               <div style="position: absolute; left: 30px; right: 0; top: 50%; height: 1px; border-top: 1px dashed rgba(0,0,0,0.05); z-index: 0;"></div>
+
+               <!-- Month Columns -->
+               <div class="trend-month-col" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 8px; flex: 1; z-index: 1;">
+                  <div class="trend-bar bg-lime" style="width: 32px; border-radius: 6px 6px 0 0; height: 0%; transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;" data-target="45%" title="Jan: 45%"></div>
+                  <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Jan</span>
+               </div>
+               <div class="trend-month-col" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 8px; flex: 1; z-index: 1;">
+                  <div class="trend-bar bg-lime" style="width: 32px; border-radius: 6px 6px 0 0; height: 0%; transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.05s; cursor: pointer;" data-target="60%" title="Feb: 60%"></div>
+                  <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Feb</span>
+               </div>
+               <div class="trend-month-col" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 8px; flex: 1; z-index: 1;">
+                  <div class="trend-bar bg-lime" style="width: 32px; border-radius: 6px 6px 0 0; height: 0%; transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.1s; cursor: pointer;" data-target="55%" title="Mar: 55%"></div>
+                  <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Mar</span>
+               </div>
+               <div class="trend-month-col" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 8px; flex: 1; z-index: 1;">
+                  <div class="trend-bar bg-lime" style="width: 32px; border-radius: 6px 6px 0 0; height: 0%; transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.15s; cursor: pointer;" data-target="80%" title="Apr: 80%"></div>
+                  <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Apr</span>
+               </div>
+               <div class="trend-month-col" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 8px; flex: 1; z-index: 1;">
+                  <div class="trend-bar bg-lime" style="width: 32px; border-radius: 6px 6px 0 0; height: 0%; transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s; cursor: pointer;" data-target="95%" title="May: 95%"></div>
+                  <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">May</span>
+               </div>
+               <div class="trend-month-col" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 8px; flex: 1; z-index: 1;">
+                  <div class="trend-bar bg-lime" style="width: 32px; border-radius: 6px 6px 0 0; height: 0%; transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.25s; cursor: pointer;" data-target="70%" title="Jun: 70%"></div>
+                  <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Jun</span>
+               </div>
+               <div class="trend-month-col" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 8px; flex: 1; z-index: 1;">
+                  <div class="trend-bar bg-lime" style="width: 32px; border-radius: 6px 6px 0 0; height: 0%; transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s; cursor: pointer;" data-target="40%" title="Jul: 40%"></div>
+                  <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Jul</span>
+               </div>
+               <div class="trend-month-col" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 8px; flex: 1; z-index: 1;">
+                  <div class="trend-bar bg-lime" style="width: 32px; border-radius: 6px 6px 0 0; height: 0%; transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.35s; cursor: pointer;" data-target="30%" title="Aug: 30%"></div>
+                  <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Aug</span>
+               </div>
+               <div class="trend-month-col" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 8px; flex: 1; z-index: 1;">
+                  <div class="trend-bar bg-lime" style="width: 32px; border-radius: 6px 6px 0 0; height: 0%; transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s; cursor: pointer;" data-target="50%" title="Sep: 50%"></div>
+                  <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Sep</span>
+               </div>
+               <div class="trend-month-col" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 8px; flex: 1; z-index: 1;">
+                  <div class="trend-bar bg-lime" style="width: 32px; border-radius: 6px 6px 0 0; height: 0%; transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.45s; cursor: pointer;" data-target="85%" title="Oct: 85%"></div>
+                  <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Oct</span>
+               </div>
+               <div class="trend-month-col" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 8px; flex: 1; z-index: 1;">
+                  <div class="trend-bar bg-lime" style="width: 32px; border-radius: 6px 6px 0 0; height: 0%; transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s; cursor: pointer;" data-target="65%" title="Nov: 65%"></div>
+                  <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Nov</span>
+               </div>
+               <div class="trend-month-col" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 8px; flex: 1; z-index: 1;">
+                  <div class="trend-bar bg-lime" style="width: 32px; border-radius: 6px 6px 0 0; height: 0%; transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.55s; cursor: pointer;" data-target="90%" title="Dec: 90%"></div>
+                  <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Dec</span>
+               </div>
+            </div>
+         </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="report.js"></script>  <script src="report.js"></script></body>
+</html>

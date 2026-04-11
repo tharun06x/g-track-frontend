@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-TRACK - Distributor Registration</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: radial-gradient(circle at top right, #2a302b, #121212 60%);
+      min-height: 100vh;
+      margin: 0;
+      color: #fff;
+      font-family: Inter, sans-serif;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      background: rgba(17, 17, 17, 0.95);
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      padding: 28px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin: 0 0 8px;
+      color: #c8c8c8;
+      font-size: 0.9rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      box-sizing: border-box;
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 12px;
+      color: #fff;
+      padding: 12px;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 16px;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 24px;
+      font-weight: 600;
+      background: var(--lime);
+      color: #111;
+      cursor: pointer;
+    }
+
+    .status {
+      min-height: 20px;
+      margin-top: 10px;
+      color: #d3d3d3;
+    }
+
+    a {
+      color: var(--lime);
+      text-decoration: none;
+      margin-left: 12px;
+    }
+
+    @media (max-width: 720px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Distributor Account Request</h1>
+    <p>Submit this form to admin. Login is available only after approval and password creation by admin.</p>
+
+    <form id="distributorRequestForm">
+      <div class="grid">
+        <div>
+          <label for="name">Contact Name</label>
+          <input id="name" required minlength="1" maxlength="50">
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" type="email" required maxlength="120">
+        </div>
+        <div>
+          <label for="phone_no">Phone Number</label>
+          <input id="phone_no" required pattern="^\+?[1-9]\d{7,14}$">
+        </div>
+        <div>
+          <label for="company_name">Company Name</label>
+          <input id="company_name" required minlength="1" maxlength="100">
+        </div>
+        <div class="full">
+          <label for="address">Address</label>
+          <textarea id="address" required minlength="5" maxlength="150"></textarea>
+        </div>
+        <div>
+          <label for="state">State</label>
+          <input id="state" required minlength="2" maxlength="30">
+        </div>
+        <div>
+          <label for="district">District</label>
+          <input id="district" required minlength="2" maxlength="30">
+        </div>
+        <div class="full">
+          <label for="reason">Reason (optional)</label>
+          <textarea id="reason" maxlength="500"></textarea>
+        </div>
+      </div>
+
+      <button type="submit">Submit Request</button>
+      <a href="distributor-login.html">Back to Distributor Login</a>
+      <p id="requestStatus" class="status"></p>
+    </form>
+  </div>
+
+  <script src="runtime-config.js"></script>
+  <script src="auth-api.js"></script>
+  <script>
+    const form = document.getElementById('distributorRequestForm');
+    const statusEl = document.getElementById('requestStatus');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const payload = {
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone_no: document.getElementById('phone_no').value.trim(),
+        company_name: document.getElementById('company_name').value.trim(),
+        address: document.getElementById('address').value.trim(),
+        state: document.getElementById('state').value.trim(),
+        district: document.getElementById('district').value.trim(),
+        reason: document.getElementById('reason').value.trim() || null,
+      };
+
+      statusEl.textContent = 'Submitting request...';
+      statusEl.style.color = '#d3d3d3';
+
+      try {
+        const result = await window.GTrackApi.request('/api/v1/admin/distributor-requests', {
+          method: 'POST',
+          body: payload,
+        });
+
+        statusEl.textContent = `Request submitted. ID: ${result.request_id}. Status: ${result.status}`;
+        statusEl.style.color = 'var(--lime)';
+        form.reset();
+      } catch (error) {
+        statusEl.textContent = error.message;
+        statusEl.style.color = '#ff7f7f';
+      }
+    });
+  </script>
+</body>
+</html>

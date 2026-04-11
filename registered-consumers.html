@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-TRACK - Consumer Directory</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="theme.js"></script>
+</head>
+<body class="monitoring-page">
+  <div class="app-layout">
+    <aside class="app-sidebar bg-white">
+      <div class="sidebar-logo" style="cursor: pointer;" onclick="window.location.href='dashboard.html'">
+        <div class="icon-circle bg-lime text-black" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+          <i class="ph-fill ph-fire"></i>
+        </div>
+        <div class="logo-text">
+          <h2>G-TRACK</h2>
+          <span>SMART MONITORING</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="monitoring.html" class="nav-item"><i class="ph-fill ph-squares-four"></i> Dashboard</a>
+        <a href="report.html" class="nav-item"><i class="ph ph-chart-bar"></i> Reports</a>
+        <a href="refill-history.html" class="nav-item"><i class="ph ph-clock-counter-clockwise"></i> Refill History</a>
+        <a href="complaints.html" class="nav-item"><i class="ph ph-warning-circle"></i> Complaints</a>
+        <a href="settings.html" class="nav-item"><i class="ph ph-gear"></i> Settings</a>
+      </nav>
+    </aside>
+
+    <main class="app-main">
+      <header class="main-header" style="margin-bottom: 24px;">
+        <h1 style="font-size: 2rem;">Registered Consumers</h1>
+      </header>
+
+      <div class="card bg-white" style="padding: 32px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 16px;">
+          <h2>Consumer Directory</h2>
+          <input type="text" placeholder="Search by consumer no or name" style="padding: 10px 14px; border: 1px solid var(--grey); border-radius: 8px; min-width: 280px; background: transparent; color: var(--black);">
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="text-align: left; border-bottom: 1px solid var(--grey); color: var(--text-secondary);">
+              <th style="padding: 12px 8px;">Consumer No.</th>
+              <th style="padding: 12px 8px;">Name</th>
+              <th style="padding: 12px 8px;">Mobile</th>
+              <th style="padding: 12px 8px;">District</th>
+              <th style="padding: 12px 8px;">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(0,0,0,0.06);">
+              <td style="padding: 14px 8px; font-weight: 600;">CN-987654</td>
+              <td style="padding: 14px 8px;">John Doe</td>
+              <td style="padding: 14px 8px;">+91 98765 43210</td>
+              <td style="padding: 14px 8px;">Ernakulam</td>
+              <td style="padding: 14px 8px;"><span class="pill bg-lime text-black" style="padding: 4px 12px; border-radius: 100px; font-weight: 600;">Active</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(0,0,0,0.06);">
+              <td style="padding: 14px 8px; font-weight: 600;">CN-123456</td>
+              <td style="padding: 14px 8px;">Jane Smith</td>
+              <td style="padding: 14px 8px;">+91 91234 56789</td>
+              <td style="padding: 14px 8px;">Kochi</td>
+              <td style="padding: 14px 8px;"><span class="pill bg-grey text-black" style="padding: 4px 12px; border-radius: 100px; font-weight: 600;">Pending</span></td>
+            </tr>
+            <tr>
+              <td style="padding: 14px 8px; font-weight: 600;">CN-456789</td>
+              <td style="padding: 14px 8px;">Robert Johnson</td>
+              <td style="padding: 14px 8px;">+91 99887 77665</td>
+              <td style="padding: 14px 8px;">Thrissur</td>
+              <td style="padding: 14px 8px;"><span class="pill bg-lime text-black" style="padding: 4px 12px; border-radius: 100px; font-weight: 600;">Active</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

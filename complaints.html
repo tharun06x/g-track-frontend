@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-TRACK - Complaints</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="theme.js"></script>
+  <!-- Runtime Configuration -->
+  <script src="runtime-config.js"></script>
+  <!-- Auth API Helper -->
+  <script src="auth-api.js"></script>
+</head>
+<body class="monitoring-page">
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="app-sidebar bg-white">
+      <div class="sidebar-logo" style="cursor: pointer;" onclick="window.location.href='dashboard.html'">
+         <div class="icon-circle bg-lime text-black" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+            <i class="ph-fill ph-fire"></i>
+         </div>
+         <div class="logo-text">
+            <h2>G-TRACK</h2>
+            <span>SMART MONITORING</span>
+         </div>
+      </div>
+
+      <nav class="sidebar-nav">
+         <a href="monitoring.html" class="nav-item"><i class="ph-fill ph-squares-four"></i> Dashboard</a>
+         <a href="report.html" class="nav-item"><i class="ph ph-chart-bar"></i> Reports</a>
+         <a href="refill-history.html" class="nav-item"><i class="ph ph-clock-counter-clockwise"></i> Refill History</a>
+         <a href="complaints.html" class="nav-item active bg-lime"><i class="ph ph-warning-circle"></i> Complaints</a>
+         <a href="settings.html" class="nav-item"><i class="ph ph-gear"></i> Settings</a>
+      </nav>
+
+      <div class="sidebar-bottom">
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      <header class="main-header" style="margin-bottom: 24px;">
+         <h1 style="font-size: 2rem;">Complaints & Support</h1>
+      </header>
+      
+      <div class="complaints-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+         <!-- Submit a Complaint -->
+         <div class="card bg-white" style="padding: 32px">
+            <h2 style="margin-bottom: 24px;">Submit a Ticket</h2>
+            <form id="complaint-form" style="display: flex; flex-direction: column; gap: 16px;">
+               <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                  <label style="font-weight: 500;">Subject</label>
+                  <input type="text" id="complaint-subject" class="form-input" placeholder="e.g. Broken flow meter on D001" style="padding: 12px; border: 1px solid var(--grey); border-radius: 8px; background: transparent; color: var(--black);">
+               </div>
+               
+               <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                  <label style="font-weight: 500;">Device ID (Optional)</label>
+                  <input type="text" id="complaint-device-id" class="form-input" placeholder="e.g. D001" style="padding: 12px; border: 1px solid var(--grey); border-radius: 8px; background: transparent; color: var(--black);">
+               </div>
+
+               <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                  <label style="font-weight: 500;">Description</label>
+                  <textarea id="complaint-description" class="form-input" rows="5" placeholder="Describe your issue in detail..." style="padding: 12px; border: 1px solid var(--grey); border-radius: 8px; resize: vertical; background: transparent; color: var(--black);"></textarea>
+               </div>
+               
+               <button type="button" class="pill-btn bg-black text-white" style="align-self: flex-start; padding: 12px 24px; font-weight: 600; margin-top: 8px; border: none; cursor: pointer; border-radius: 100px;">Submit Ticket</button>
+            </form>
+         </div>
+
+         <!-- Previous Tickets -->
+         <div class="card bg-white" style="padding: 32px">
+            <h2 style="margin-bottom: 24px;">Previous Tickets</h2>
+            <div class="ticket-list" style="display: flex; flex-direction: column; gap: 16px;">
+               <!-- Tickets will be loaded here dynamically -->
+            </div>
+         </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Complaints Script -->
+  <script src="complaints.js"></script>
+</body>
+</html>

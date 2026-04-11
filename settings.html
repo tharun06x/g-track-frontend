@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-TRACK - Settings</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="theme.js"></script>
+  <!-- Runtime Configuration -->
+  <script src="runtime-config.js"></script>
+  <!-- Auth API Helper -->
+  <script src="auth-api.js"></script>
+</head>
+<body class="detail-page">
+  <div class="dashboard-container" style="display: flex; flex-direction: column; width: 100%; max-width: 1000px; margin: 0 auto;">
+    
+    <!-- Top Nav -->
+    <div class="sub-nav" style="display: flex; align-items: center; gap: 24px; margin-bottom: 24px;">
+       <button class="circle-btn bg-white" style="box-shadow: 0 4px 12px rgba(0,0,0,0.05);" onclick="window.location.href='dashboard.html'">
+          <i class="ph ph-arrow-u-up-left"></i>
+       </button>
+       <h1 style="margin: 0; font-size: 2.2rem; letter-spacing: -0.04em;">Settings</h1>
+    </div>
+
+    <!-- Settings Layout -->
+    <div class="settings-layout" style="display: grid; grid-template-columns: 280px 1fr; gap: 40px; align-items: start; height: 100%;">
+       
+       <!-- Sidebar -->
+       <div class="settings-sidebar card bg-white">
+         <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px;">
+           <li class="settings-nav-item active" id="nav-appearance" onclick="switchTab('appearance')" style="cursor: pointer;"><i class="ph ph-palette"></i> Appearance</li>
+           <li class="settings-nav-item" id="nav-account" onclick="switchTab('account')" style="cursor: pointer;"><i class="ph ph-user"></i> Account Profile</li>
+           <li class="settings-nav-item" id="nav-notifications" onclick="switchTab('notifications')" style="cursor: pointer;">
+             <i class="ph ph-bell"></i> Notifications
+             <div class="live-dot ml-auto"></div>
+           </li>
+
+           <li style="height: 1px; background: var(--grey); margin: 12px 0;"></li>
+           <li class="settings-nav-item" style="color: #ff3a3a; font-weight: 600; cursor: pointer;" onclick="window.location.href='index.html'"><i class="ph ph-sign-out"></i> Log out</li>
+         </ul>
+       </div>
+
+       <!-- Content Area -->
+       <div class="settings-content-area column" style="position: relative;">
+         
+         <div id="section-appearance" style="display: flex; flex-direction: column; gap: 24px;">
+         <!-- Appearance Section -->
+         <div class="card bg-white">
+           <h2 style="margin-bottom: 8px;">Theme Preference</h2>
+           <p style="color: var(--text-secondary); margin-bottom: 32px;">Customize your workspace appearance. It instantly applies globally.</p>
+           
+           <div class="theme-options" style="display: flex; gap: 24px;">
+              <button class="theme-btn" data-theme-value="light" style="flex: 1; padding: 32px 24px; border-radius: 16px; border: 2px solid var(--grey); cursor: pointer; text-align: center; gap: 16px; display: flex; flex-direction: column; font-weight: 500; font-size: 1.1rem; color: var(--black); background: transparent; transition: all 0.2s;">
+                <i class="ph ph-sun" style="font-size: 2.5rem;"></i> Light Mode
+              </button>
+              <button class="theme-btn" data-theme-value="dark" style="flex: 1; padding: 32px 24px; border-radius: 16px; border: 2px solid var(--grey); cursor: pointer; text-align: center; gap: 16px; display: flex; flex-direction: column; font-weight: 500; font-size: 1.1rem; color: var(--black); background: transparent; transition: all 0.2s;">
+                <i class="ph ph-moon" style="font-size: 2.5rem;"></i> Dark Mode
+              </button>
+           </div>
+         </div>
+
+         <!-- General / Regional Settings -->
+         <div class="card bg-white">
+           <h2 style="margin-bottom: 24px;">Preferences</h2>
+           <div class="settings-row" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px dashed var(--grey);">
+             <div>
+               <div style="font-weight: 600; font-size: 1.1rem; margin-bottom: 4px;">Auto Delivery</div>
+               <div style="color: var(--text-secondary); font-size: 0.9rem;">Automatically schedule gas refills when low.</div>
+             </div>
+             <div id="auto-delivery-toggle" class="pill bg-grey text-black" style="padding: 8px 16px; font-weight: 600; cursor: pointer; transition: all 0.2s;">Disabled <i class="ph-bold ph-x"></i></div>
+           </div>
+
+           <div class="settings-row" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px dashed var(--grey);">
+             <span style="font-weight: 500; color: var(--text-secondary);">Display Language</span>
+             <select class="dropdown-pill outline bg-hover" id="language-select" style="color: var(--black); border: 1px solid var(--grey); cursor: pointer;">
+               <option value="en-US">English (US)</option>
+               <option value="es-ES">Español (ES)</option>
+               <option value="fr-FR">Français (FR)</option>
+               <option value="de-DE">Deutsch (DE)</option>
+             </select>
+           </div>
+           <div class="settings-row" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0 0;">
+             <span style="font-weight: 500; color: var(--text-secondary);">Time Zone</span>
+             <select class="dropdown-pill outline bg-hover" id="timezone-select" style="color: var(--black); border: 1px solid var(--grey); cursor: pointer;">
+               <option value="UTC">(UTC) Coordinated Universal Time</option>
+               <option value="EST">(UTC-05:00) Eastern Time</option>
+               <option value="PST">(UTC-08:00) Pacific Time</option>
+               <option value="IST">(UTC+05:30) Indian Standard Time</option>
+             </select>
+           </div>
+         </div>
+         </div> <!-- end section-appearance -->
+
+         <!-- Account Profile Section -->
+         <div id="section-account" style="display: none; flex-direction: column; gap: 24px;">
+           <div class="card bg-white">
+             <h2 style="margin-bottom: 24px;">Public Profile</h2>
+             <div style="display: flex; gap: 24px; align-items: center; margin-bottom: 32px;">
+                <div>
+                   <h3 id="profile-name" style="margin: 0; font-size: 1.5rem;">Loading...</h3>
+                   <p id="profile-role" style="color: var(--text-secondary); margin: 4px 0 0; font-weight: 500;">User</p>
+                </div>
+             </div>
+
+             <h3 style="margin-top: 32px; margin-bottom: 16px; font-size: 1.2rem; border-top: 1px dashed var(--grey); padding-top: 24px;">Personal Information</h3>
+             
+             <div class="form-row">
+               <div class="form-group">
+                 <label>Full Name</label>
+                 <input type="text" id="user-name" class="form-input" placeholder="Enter your name">
+               </div>
+               <div class="form-group">
+                 <label>Email Address</label>
+                 <input type="email" id="user-email" class="form-input" placeholder="Email Address" readonly style="background: var(--grey); color: var(--text-secondary);">
+               </div>
+             </div>
+
+             <div class="form-row">
+               <div class="form-group">
+                 <label>Mobile Number</label>
+                 <input type="tel" id="user-phone" class="form-input" placeholder="Mobile Number">
+               </div>
+               <div class="form-group">
+                 <label>Gas Agency / Distributor</label>
+                 <input type="text" id="user-agency" class="form-input" placeholder="Gas Agency Name" readonly style="background: var(--grey); color: var(--text-secondary);">
+               </div>
+             </div>
+
+             <h3 style="margin-top: 16px; margin-bottom: 16px; font-size: 1.2rem; border-top: 1px dashed var(--grey); padding-top: 24px;">Address Details</h3>
+
+             <div class="form-group">
+               <label>Address Line</label>
+               <input type="text" id="user-address" class="form-input" placeholder="Full Address Line">
+             </div>
+
+             <div class="form-row">
+               <div class="form-group">
+                 <label>State</label>
+                 <input type="text" id="user-state" class="form-input" placeholder="State">
+               </div>
+               <div class="form-group">
+                 <label>District</label>
+                 <input type="text" id="user-district" class="form-input" placeholder="District">
+               </div>
+             </div>
+
+             <h3 style="margin-top: 16px; margin-bottom: 16px; font-size: 1.2rem; border-top: 1px dashed var(--grey); padding-top: 24px;">Security</h3>
+             
+             <div class="settings-row" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px dashed var(--grey);">
+                <div>
+                   <div style="font-weight: 600; font-size: 1.1rem; margin-bottom: 4px;">Password</div>
+                   <div style="color: var(--text-secondary); font-size: 0.9rem;">Last changed 3 months ago</div>
+                </div>
+                <button class="pill-btn bg-grey text-black" style="padding: 8px 16px; font-weight: 600;">Change Password</button>
+             </div>
+
+             <div style="display: flex; justify-content: flex-end; margin-top: 32px;">
+                <button class="pill-btn bg-black text-white" style="padding: 14px 32px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s;" onclick="this.style.transform='scale(0.95)'; setTimeout(()=>this.style.transform='', 150);">Save Changes</button>
+             </div>
+           </div>
+         </div> <!-- end section-account -->
+
+         <!-- Notifications Section -->
+         <div id="section-notifications" style="display: none; flex-direction: column; gap: 24px;">
+           <div class="card bg-white">
+             <h2 style="margin-bottom: 8px;">Alert Preferences</h2>
+             <p style="color: var(--text-secondary); margin-bottom: 32px;">Choose what events you want to be notified about.</p>
+
+             <div class="settings-row" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px dashed var(--grey);">
+                <div>
+                   <div style="font-weight: 600; font-size: 1.1rem; margin-bottom: 4px;">Critical system alerts</div>
+                   <div style="color: var(--text-secondary); font-size: 0.9rem;">Receive urgent alerts like offline sensors or extreme levels.</div>
+                </div>
+                <div class="pill bg-lime text-black" style="padding: 8px 16px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onclick="this.classList.toggle('bg-lime'); this.classList.toggle('bg-grey'); this.innerHTML = this.classList.contains('bg-lime') ? 'Enabled <i class=\'ph-bold ph-check\'></i>' : 'Disabled <i class=\'ph-bold ph-x\'></i>';">Enabled <i class="ph-bold ph-check"></i></div>
+             </div>
+
+             <div class="settings-row" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px dashed var(--grey);">
+                <div>
+                   <div style="font-weight: 600; font-size: 1.1rem; margin-bottom: 4px;">Weekly reports</div>
+                   <div style="color: var(--text-secondary); font-size: 0.9rem;">A summary of analytics sent to your email.</div>
+                </div>
+                <div class="pill bg-grey text-black" style="padding: 8px 16px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onclick="this.classList.toggle('bg-grey'); this.classList.toggle('bg-lime'); this.innerHTML = this.classList.contains('bg-lime') ? 'Enabled <i class=\'ph-bold ph-check\'></i>' : 'Disabled <i class=\'ph-bold ph-x\'></i>';">Disabled <i class="ph-bold ph-x"></i></div>
+             </div>
+             
+             <div class="settings-row" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0;">
+                <div>
+                   <div style="font-weight: 600; font-size: 1.1rem; margin-bottom: 4px;">Device updates</div>
+                   <div style="color: var(--text-secondary); font-size: 0.9rem;">Firmware installation notices and sync logs.</div>
+                </div>
+                <div class="pill bg-lime text-black" style="padding: 8px 16px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onclick="this.classList.toggle('bg-lime'); this.classList.toggle('bg-grey'); this.innerHTML = this.classList.contains('bg-lime') ? 'Enabled <i class=\'ph-bold ph-check\'></i>' : 'Disabled <i class=\'ph-bold ph-x\'></i>';">Enabled <i class="ph-bold ph-check"></i></div>
+             </div>
+           </div>
+         </div> <!-- end section-notifications -->
+
+       </div>
+    </div>
+  </div>
+</body>
+<!-- Settings Script -->
+<script src="settings.js"></script>
+</html>

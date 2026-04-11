@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-TRACK - Distributor Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    body {
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+      transition: background-color 0.4s ease;
+    }
+    
+    .login-wrapper {
+      background-color: #111111;
+      width: 100%;
+      max-width: 1100px;
+      height: 650px;
+      border-radius: var(--border-radius-xl, 40px);
+      display: flex;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+      transition: background-color 0.4s ease;
+    }
+
+    .login-left {
+      flex: 1;
+      padding: 50px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Standardized with global sidebar-logo classes */
+
+    .form-container {
+      max-width: 340px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .login-title {
+      font-size: 2.2rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+      text-align: center;
+      color: #ffffff;
+    }
+
+    .login-subtitle {
+      color: #aaaaaa;
+      font-size: 0.9rem;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 0.85rem;
+      color: #bbbbbb;
+      margin-bottom: 8px;
+      margin-left: 16px;
+    }
+
+    .input-field {
+      width: 100%;
+      background: #222222;
+      border: 1px solid transparent;
+      padding: 16px 20px;
+      border-radius: 100px;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+      outline: none;
+      transition: background 0.2s, box-shadow 0.2s, border 0.2s;
+      color: #ffffff;
+      font-family: inherit;
+    }
+
+    .input-field:focus {
+      background: #111111;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      border: 1px solid var(--lime);
+    }
+
+    .password-container {
+      position: relative;
+    }
+    
+    .eye-icon {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #aaaaaa;
+    }
+
+    .forgot-pwd {
+      text-align: right;
+      margin-top: -10px;
+      margin-bottom: 24px;
+      margin-right: 16px;
+    }
+
+    .forgot-pwd a {
+      color: #999999;
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .forgot-pwd a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background-color: var(--lime);
+      color: #111;
+      border: none;
+      padding: 16px;
+      border-radius: 100px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+      font-family: inherit;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+
+    .login-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      font-size: 0.85rem;
+      color: #aaaaaa;
+    }
+    
+    .role-links {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    
+    .role-links span {
+      opacity: 0.7;
+    }
+    
+    .role-links a {
+      color: #999999;
+      text-decoration: none;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+    .role-links a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    .login-right {
+      flex: 1.1; 
+      position: relative;
+      margin: 16px 16px 16px 0;
+      border-radius: 30px;
+      overflow: hidden;
+      background-color: #222;
+    }
+
+    .bg-image {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-size: cover;
+      background-position: center;
+      transition: opacity 1s ease-in-out;
+      opacity: 0;
+    }
+    .bg-image.active {
+      opacity: 1;
+    }
+
+    /* Glassmorphic fact card */
+    .gas-fact-card {
+      position: absolute;
+      bottom: 40px;
+      left: 40px;
+      right: 40px;
+      background: rgba(20,20,20,0.5);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 24px;
+      border-radius: 20px;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+      transform: translateY(20px);
+      opacity: 0;
+      z-index: 2;
+    }
+
+    .gas-fact-card.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .gas-fact-card h3 {
+      margin: 0;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--lime);
+    }
+
+    .gas-fact-card p {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 300;
+      line-height: 1.4;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    /* Overlay gradient for readability */
+    .login-right::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0; height: 60%;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
+      z-index: 1;
+      pointer-events: none;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="login-wrapper">
+    <!-- Left Form Section -->
+    <div class="login-left">
+      <div class="sidebar-logo" style="display: flex; align-items: center; gap: 12px;">
+         <div class="icon-circle bg-lime text-black" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+            <i class="ph-fill ph-fire"></i>
+         </div>
+         <div class="logo-text" style="display: flex; flex-direction: column;">
+            <h2 style="font-size: 1.25rem; font-weight: 600; margin: 0; color: #ffffff; letter-spacing: -0.02em;">G-TRACK</h2>
+            <span style="font-size: 0.65rem; font-weight: 600; letter-spacing: 0.05em; color: #aaaaaa;">SMART MONITORING</span>
+         </div>
+      </div>
+
+      <div class="form-container">
+        <h1 class="login-title">Distributor Login</h1>
+        <p class="login-subtitle">Access your G-TRACK distributor portal</p>
+
+        <form id="distributorLoginForm">
+          <div class="input-group">
+            <label class="input-label">Distributor Email</label>
+            <input type="email" id="distributorEmail" class="input-field" placeholder="your@email.com" required>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label">Password</label>
+            <div class="password-container">
+              <input type="password" id="distributorPassword" class="input-field" placeholder="••••••••••••••••" required>
+              <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="forgot-pwd">
+            <a href="#">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="submit-btn">Login</button>
+          <p id="distributorLoginStatus" style="min-height: 20px; margin: 14px 8px 0; color: #dddddd; font-size: 0.85rem;"></p>
+          <div style="text-align: center; margin-top: 10px;">
+            <a href="distributor-request.html" style="color: var(--lime); font-size: 0.85rem; text-decoration: none;">Need distributor account? Submit request</a>
+          </div>
+        </form>
+      </div>
+
+      <div class="login-footer">
+        <div class="role-links">
+          <span>Login route:</span>
+          <a href="index.html">Consumer</a>
+          <a href="admin-login.html">Admin</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Image Section -->
+    <div class="login-right">
+      <div id="bg1" class="bg-image active" style="background-image: url('bg1.jpg')"></div>
+      <div id="bg2" class="bg-image"></div>
+
+      <div class="gas-fact-card show" id="factCard">
+        <h3>Did you know?</h3>
+        <p id="factText">Liquefied Petroleum Gas (LPG) expands 270 times when it turns into vapor, making it highly efficient for storage and transport.</p>
+      </div>
+    </div>
+  </div>
+
+<script src="runtime-config.js"></script>
+<script src="auth-api.js"></script>
+<script src="theme.js"></script>
+<script>
+  // Setup the rotating facts and images
+  const facts = [
+    {
+      text: "Liquefied Petroleum Gas (LPG) expands 270 times when it turns into vapor, making it highly efficient for storage and transport.",
+      img: "bg1.jpg"
+    },
+    {
+      text: "Natural gas is completely odorless and colorless in its native state. The distinctive smell is added for safety leak detection.",
+      img: "bg2.jpg"
+    },
+    {
+      text: "CNG is lighter than air, meaning if a leak occurs it quickly dissipates into the atmosphere, making it a safer alternative.",
+      img: "bg3.jpg"
+    },
+    {
+      text: "A single natural gas transmission pipeline can carry enough energy to power a small city.",
+      img: "bg4.jpg"
+    },
+    {
+      text: "The first commercial oil well was drilled in 1859 in Titusville, Pennsylvania.",
+      img: "bg5.jpg"
+    },
+    {
+      text: "Modern container ships can carry over 24,000 TEUs (Twenty-foot Equivalent Units), making global trade highly efficient.",
+      img: "bg6.jpg"
+    }
+  ];
+
+  let currentIndex = 0;
+  let activeBg = 1;
+  const slideDuration = 12000; // 12 seconds per slide
+
+  const bg1 = document.getElementById('bg1');
+  const bg2 = document.getElementById('bg2');
+  const factCard = document.getElementById('factCard');
+  const factText = document.getElementById('factText');
+
+  function rotateFact() {
+    // Pick a random slide different from current
+    let nextIndex = currentIndex;
+    while (nextIndex === currentIndex) {
+      nextIndex = Math.floor(Math.random() * facts.length);
+    }
+    currentIndex = nextIndex;
+    const nextFact = facts[currentIndex];
+
+    // Fade out text
+    factCard.style.opacity = '0';
+    factCard.style.transform = 'translateY(10px)';
+
+    // Swap images
+    if (activeBg === 1) {
+      bg2.style.backgroundImage = `url('${nextFact.img}')`;
+      bg2.classList.add('active');
+      bg1.classList.remove('active');
+      activeBg = 2;
+    } else {
+      bg1.style.backgroundImage = `url('${nextFact.img}')`;
+      bg1.classList.add('active');
+      bg2.classList.remove('active');
+      activeBg = 1;
+    }
+
+    // Wait a short moment then fade text back in
+    setTimeout(() => {
+      factText.innerText = nextFact.text;
+      factCard.style.opacity = '1';
+      factCard.style.transform = 'translateY(0)';
+    }, 500);
+  }
+
+  // Initial setup
+  bg1.style.backgroundImage = `url('${facts[0].img}')`;
+  factText.innerText = facts[0].text;
+
+  // Start interval
+  setInterval(rotateFact, slideDuration);
+
+  // Password toggle
+  document.querySelector('.eye-icon').addEventListener('click', function() {
+    const input = this.previousElementSibling;
+    if (input.type === 'password') {
+      input.type = 'text';
+    } else {
+      input.type = 'password';
+    }
+  });
+
+  const distributorLoginForm = document.getElementById('distributorLoginForm');
+  const distributorLoginStatus = document.getElementById('distributorLoginStatus');
+  distributorLoginForm.addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const email = document.getElementById('distributorEmail').value.trim();
+    const password = document.getElementById('distributorPassword').value;
+
+    distributorLoginStatus.textContent = 'Signing in...';
+    distributorLoginStatus.style.color = '#dddddd';
+
+    try {
+      const result = await window.GTrackApi.request('/api/v1/distributors/login', {
+        method: 'POST',
+        body: { email, password }
+      });
+
+      window.GTrackApi.saveAuth({
+        role: 'distributor',
+        token: result.access_token,
+        distributor_id: result.distributor_id,
+        name: result.name,
+        email: result.email
+      });
+
+      // Keep auth in sync with gtrack_dist app storage key so portal opens directly.
+      localStorage.setItem('gtrack_dist_auth', JSON.stringify({
+        role: 'distributor',
+        token: result.access_token,
+        distributor_id: result.distributor_id,
+        name: result.name,
+        email: result.email
+      }));
+
+      distributorLoginStatus.textContent = 'Login successful. Redirecting...';
+      distributorLoginStatus.style.color = 'var(--lime)';
+
+      const portalUrl = (window.GTRACK_DIST_URL || '').trim();
+      if (portalUrl) {
+        window.location.href = `${portalUrl.replace(/\/$/, '')}/#/dashboard`;
+      } else {
+        window.location.href = 'dashboard2.html';
+      }
+    } catch (error) {
+      distributorLoginStatus.textContent = `${error.message}. If your account is new, wait for admin approval or submit a request.`;
+      distributorLoginStatus.style.color = '#ff7f7f';
+    }
+  });
+</script>
+</body>
+</html>

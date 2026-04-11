@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-TRACK - Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="theme.js"></script>
+</head>
+<body class="monitoring-page">
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="app-sidebar bg-white">
+      <div class="sidebar-logo" style="cursor: pointer;" onclick="window.location.href='dashboard.html'">
+         <div class="icon-circle bg-lime text-black" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+            <i class="ph-fill ph-fire"></i>
+         </div>
+         <div class="logo-text">
+            <h2>G-TRACK</h2>
+            <span>SMART MONITORING</span>
+         </div>
+      </div>
+
+      <nav class="sidebar-nav">
+         <a href="#" class="nav-item active bg-lime"><i class="ph-fill ph-squares-four"></i> Dashboard</a>
+         <a href="report.html" class="nav-item"><i class="ph ph-chart-bar"></i> Reports</a>
+         <a href="refill-history.html" class="nav-item"><i class="ph ph-clock-counter-clockwise"></i> Refill History</a>
+         <a href="complaints.html" class="nav-item"><i class="ph ph-warning-circle"></i> Complaints</a>
+         <a href="settings.html" class="nav-item"><i class="ph ph-gear"></i> Settings</a>
+      </nav>
+
+      <div class="sidebar-bottom">
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      <header class="main-header">
+         <h1>Dashboard</h1>
+         <div class="header-actions">
+            <button class="circle-btn bg-white" data-refresh="monitoring" title="Refresh Data"><i class="ph-fill ph-arrow-clockwise"></i></button>
+            <button class="circle-btn bg-white"><i class="ph-fill ph-bell"></i></button>
+            <button class="circle-btn bg-white"><i class="ph-fill ph-question"></i></button>
+         </div>
+      </header>
+
+      <div class="monitoring-grid">
+         <!-- Left Column -->
+         <div class="col-left column" style="gap: 24px;">
+            <!-- 1. Real-Time Gauge Card -->
+            <div class="card new-gas-card bg-lime text-black" style="min-height: 380px; display: flex; position: relative; overflow: hidden; padding: 40px;">
+              <!-- Top Left Icon -->
+              <button class="circle-btn bg-white" style="position: absolute; top: 32px; left: 32px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); width: 64px; height: 64px; cursor: pointer;">
+                 <i class="ph ph-trend-up" style="font-size: 1.8rem; font-weight: 600;"></i>
+              </button>
+
+              <!-- Bottom Left Text -->
+              <div style="position: absolute; bottom: 40px; left: 32px; display: flex; flex-direction: column; gap: 8px;">
+                 <div style="display: flex; align-items: center; gap: 12px;">
+                   <span id="gas-percent" style="font-size: 2.8rem; font-weight: 600; letter-spacing: -0.02em;">14%</span>
+                   <button class="circle-btn bg-white" style="width: 36px; height: 36px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                     <i class="ph ph-arrow-up-right" style="font-size: 1.1rem; font-weight: 600;"></i>
+                   </button>
+                 </div>
+
+              </div>
+
+              <!-- Right Side Gauge -->
+              <div class="gauge-wrapper" style="margin-left: auto; width: 65%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+                 <svg viewBox="0 0 200 130" style="width: 100%; max-width: 400px; overflow: visible;">
+                   <defs>
+                     <pattern id="stripePattern" width="4" height="4" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+                       <line x1="0" y1="0" x2="0" y2="4" stroke="var(--black)" stroke-width="1.2" opacity="0.4" />
+                     </pattern>
+                   </defs>
+                   <!-- Striped background arc -->
+                   <path d="M 20 110 A 80 80 0 0 1 180 110" fill="none" stroke="url(#stripePattern)" stroke-width="20" stroke-linecap="round" />
+                   <!-- Foreground Black arc -->
+                   <path id="gauge-fill-live" d="M 20 110 A 80 80 0 0 1 180 110" fill="none" stroke="var(--black)" stroke-width="20" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="251.3" />
+                   <!-- Purple dot with arrow pointer -->
+                   <g transform="translate(100, 85)">
+                      <g id="gauge-pointer-live">
+                         <circle cx="0" cy="0" r="5" fill="#a881ff" stroke="var(--black)" stroke-width="2"/>
+                         <polygon points="-12,0 -4,-4 -4,4" fill="var(--black)"/>
+                      </g>
+                   </g>
+                 </svg>
+                 <!-- Big Number -->
+                 <div id="gas-weight-value-live" style="font-size: 3.8rem; font-weight: 600; letter-spacing: -0.04em; margin-top: -30px; z-index: 2;">138.7 kg</div>
+              </div>
+            </div>
+
+            <!-- 2. Consumption Trends -->
+            <div class="card bg-black text-white" style="min-height: 280px; display: flex; flex-direction: column; border-radius: 40px; padding: 32px 40px;">
+               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                  <h3 style="font-weight: 600;">Consumption Trends</h3>
+                  <div class="pill-group" id="trend-period-toggles" style="display: flex; gap: 8px;">
+                     <button class="pill active bg-white" data-period="weekly" style="border: none; padding: 8px 20px; border-radius: 100px; font-weight: 600; color: var(--black); cursor: pointer; transition: all 0.3s;">Weekly</button>
+                     <button class="pill" data-period="monthly" style="border: none; background: transparent; padding: 8px 20px; border-radius: 100px; font-weight: 500; color: rgba(255,255,255,0.6); cursor: pointer; transition: all 0.3s;">Monthly</button>
+                  </div>
+               </div>
+               
+               <div class="trend-chart" id="consumption-trend-chart" style="flex: 1; display: flex; align-items: flex-end; justify-content: space-between; padding-top: 24px; position: relative;">
+                  <div class="trend-col"><div class="trend-bar" style="height: 40%;"></div><span>Mon</span></div>
+                  <div class="trend-col"><div class="trend-bar" style="height: 30%;"></div><span>Tue</span></div>
+                  <div class="trend-col"><div class="trend-bar" style="height: 45%;"></div><span>Wed</span></div>
+                  <div class="trend-col active"><div class="trend-bar" style="height: 70%;"></div><span>Thu</span></div>
+                  <div class="trend-col"><div class="trend-bar" style="height: 50%;"></div><span>Fri</span></div>
+                  <div class="trend-col"><div class="trend-bar" style="height: 20%;"></div><span>Sat</span></div>
+                  <div class="trend-col"><div class="trend-bar" style="height: 35%;"></div><span>Sun</span></div>
+               </div>
+            </div>
+
+
+         </div>
+
+         <!-- Right Column -->
+         <div class="col-right column" style="gap: 24px;">
+            <!-- Book Refill Card (moved and styled to match) -->
+            <div class="card bg-black text-white" style="border-radius: 100px; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+               <div style="display: flex; align-items: center; gap: 16px;">
+                 <div class="icon-circle" style="width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #222;">
+                    <i class="ph-fill ph-gas-pump text-lime" style="font-size: 1.5rem;"></i>
+                 </div>
+                 <div>
+                    <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7); letter-spacing: 0.05em; margin-bottom: 2px; font-weight: 600;">CYLINDER BOOKING</div>
+                    <div style="font-size: 1.25rem; font-weight: 600;">Book Refill</div>
+                 </div>
+               </div>
+               <button class="pill-btn bg-lime text-black" style="padding: 8px 24px; font-weight: 600; font-size: 0.9rem;" onclick="window.location.href='book-refill.html'">Book Now</button>
+            </div>
+
+            <!-- Days Remaining -->
+            <div class="card bg-white" style="border-radius: 40px; padding: 32px;">
+               <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.05em; margin-bottom: 12px;">DAYS REMAINING</div>
+               <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 20px;">
+                  <div id="days-remaining-value" style="font-size: 3.5rem; font-weight: 600; line-height: 1; letter-spacing: -0.02em;">--</div>
+                  <div style="font-size: 1.1rem; color: var(--text-secondary); font-weight: 500;">Days (Est.)</div>
+               </div>
+               <div class="progress-bar-bg" style="height: 12px; border-radius: 12px; background: #E2E8F0; width: 100%;">
+                  <div id="days-remaining-progress" class="progress-bar-fill" style="width: 0%; background: #6b7e51; border-radius: 12px; height: 100%;"></div>
+               </div>
+               <div style="font-size: 0.75rem; color: var(--text-secondary); text-align: right; margin-top: 12px; font-style: italic;">Based on last 30 days usage</div>
+            </div>
+
+            <!-- Refill Threshold -->
+            <div class="card bg-white" style="border-radius: 40px; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between;">
+               <div>
+                  <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.05em; margin-bottom: 4px;">REFILL THRESHOLD</div>
+                  <div id="refill-threshold-value" style="font-size: 2.2rem; font-weight: 600; line-height: 1;">--</div>
+                           <div style="margin-top: 10px; font-size: 0.78rem; color: var(--text-secondary);">
+                              Dataset v<span id="dataset-version-value">--</span> · Cycles <span id="lifecycle-count-value">--</span>
+                           </div>
+                           <div style="margin-top: 4px; font-size: 0.78rem; color: var(--text-secondary);">
+                              Rows: R<span id="synthetic-readings-count">--</span> / F<span id="synthetic-features-count">--</span>
+                           </div>
+               </div>
+               <button class="pill-btn bg-grey text-black" style="padding: 12px 28px; font-weight: 600; font-size: 0.95rem;" onclick="window.location.href='settings.html'">Modify</button>
+            </div>
+
+            <!-- Consumption Rating -->
+            <div class="card bg-white" style="border-radius: 40px; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between;">
+               <div>
+                  <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.05em; margin-bottom: 4px;">CONSUMPTION RATING</div>
+                  <div id="consumption-rating" style="font-size: 2.2rem; font-weight: 600; line-height: 1;">--</div>
+                  <div id="feature-consumption-day" style="margin-top: 10px; font-size: 0.78rem; color: var(--text-secondary);">Feature daily usage: --</div>
+               </div>
+               <div id="consumption-badge" class="pill bg-grey text-black" style="padding: 10px 20px; border-radius: 100px; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+                  <div id="consumption-dot" style="width: 10px; height: 10px; border-radius: 50%; background: var(--lime);"></div>
+                  <span id="consumption-badge-label">Stable</span>
+               </div>
+            </div>
+
+            <!-- Activity List -->
+            <div class="card bg-white activity-list-card" style="flex: 1; padding: 32px; border-radius: 40px;">
+               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                  <h3 style="font-weight: 600;">Activity</h3>
+                  <i class="ph ph-clock-counter-clockwise" style="font-size: 1.25rem; color: var(--text-secondary); cursor: pointer;"></i>
+               </div>
+               
+               <div id="activity-timeline-list" class="activity-timeline" style="display: flex; flex-direction: column; gap: 24px; position: relative;">
+                  <!-- Timeline Line -->
+                  <div style="position: absolute; left: 15px; top: 10px; bottom: 10px; border-left: 2px dashed #E2E8F0; z-index: 0;"></div>
+                  
+                  <!-- Items -->
+                  <div class="activity-item" style="display: flex; gap: 16px; position: relative; z-index: 1;">
+                     <div class="icon-circle bg-lime text-black" style="width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><i class="ph-bold ph-check"></i></div>
+                     <div>
+                        <div style="font-weight: 600; font-size: 0.95rem;">Refill Detected</div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;">+60.0kg added successfully</div>
+                        <div style="font-size: 0.7rem; color: #a0a0a0; font-weight: 600; letter-spacing: 0.05em;">2 HOURS AGO</div>
+                     </div>
+                  </div>
+
+                  <div class="activity-item" style="display: flex; gap: 16px; position: relative; z-index: 1;">
+                     <div class="icon-circle" style="background: #FBBF24; color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><i class="ph-bold ph-warning"></i></div>
+                     <div>
+                        <div style="font-weight: 600; font-size: 0.95rem;">Threshold Warning</div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;">Level dropped below 20%</div>
+                        <div style="font-size: 0.7rem; color: #a0a0a0; font-weight: 600; letter-spacing: 0.05em;">YESTERDAY</div>
+                     </div>
+                  </div>
+
+                  <div class="activity-item" style="display: flex; gap: 16px; position: relative; z-index: 1;">
+                     <div class="icon-circle bg-grey" style="color: var(--text-secondary); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><i class="ph-bold ph-wifi-slash"></i></div>
+                     <div>
+                        <div style="font-weight: 600; font-size: 0.95rem;">Connectivity Alert</div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;">Temporary signal drop (3min)</div>
+                        <div style="font-size: 0.7rem; color: #a0a0a0; font-weight: 600; letter-spacing: 0.05em;">3 DAYS AGO</div>
+                     </div>
+                  </div>
+               </div>
+
+               <button class="pill-btn bg-grey text-black" style="width: 100%; justify-content: center; margin-top: 32px; padding: 16px; font-weight: 600;">View Full Audit Log</button>
+            </div>
+         </div>
+      </div>
+    </main>
+  </div>
+
+   <script src="runtime-config.js"></script>
+   <script src="auth-api.js"></script>
+   <script src="monitoring.js"></script>
+</body>
+</html>

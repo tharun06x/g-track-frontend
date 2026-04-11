@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-TRACK - User Registration</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: linear-gradient(130deg, #111111, #1e2421);
+      min-height: 100vh;
+      margin: 0;
+      color: #fff;
+      font-family: Inter, sans-serif;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      background: rgba(17, 17, 17, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      margin-top: 0;
+      margin-bottom: 22px;
+      color: #b6b6b6;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin: 0 0 8px;
+      color: #c7c7c7;
+      font-size: 0.9rem;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      background: #222;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 12px;
+      box-sizing: border-box;
+      font-size: 0.95rem;
+    }
+
+    textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    .actions {
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: var(--lime);
+      color: #111;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 24px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .status {
+      min-height: 20px;
+      color: #d3d3d3;
+      font-size: 0.9rem;
+    }
+
+    a {
+      color: var(--lime);
+      text-decoration: none;
+    }
+
+    @media (max-width: 720px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Create User Account</h1>
+    <p class="subtitle">Fill all required fields from the user registration schema.</p>
+
+    <form id="userRegisterForm">
+      <div class="grid">
+        <div>
+          <label for="name">Name</label>
+          <input id="name" name="name" required minlength="1" maxlength="50">
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required maxlength="120">
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" required minlength="8" maxlength="20">
+        </div>
+        <div>
+          <label for="retrypassword">Retype Password</label>
+          <input id="retrypassword" name="retrypassword" type="password" required minlength="8" maxlength="20">
+        </div>
+        <div>
+          <label for="consumer_number">Consumer Number</label>
+          <input id="consumer_number" name="consumer_number" required>
+        </div>
+        <div>
+          <label for="mobile">Mobile (+countrycode...)</label>
+          <input id="mobile" name="mobile" required pattern="^\+?[1-9]\d{7,14}$">
+        </div>
+        <div class="full">
+          <label for="address">Address</label>
+          <textarea id="address" name="address" required minlength="10" maxlength="120"></textarea>
+        </div>
+        <div>
+          <label for="state">State</label>
+          <input id="state" name="state" required>
+        </div>
+        <div>
+          <label for="district">District</label>
+          <input id="district" name="district" required>
+        </div>
+        <div>
+          <label for="distributor">Distributor Name</label>
+          <select id="distributor" name="distributor" required>
+            <option value="">Loading distributors...</option>
+          </select>
+        </div>
+        <div>
+          <label for="device_id">Device ID (optional)</label>
+          <input id="device_id" name="device_id" maxlength="30">
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit">Create Account</button>
+        <a href="index.html">Back to Login</a>
+      </div>
+      <p id="registerStatus" class="status"></p>
+    </form>
+  </div>
+
+  <script src="runtime-config.js"></script>
+  <script src="auth-api.js"></script>
+  <script>
+    const form = document.getElementById('userRegisterForm');
+    const statusEl = document.getElementById('registerStatus');
+    const distributorSelect = document.getElementById('distributor');
+
+    async function loadDistributors() {
+      distributorSelect.innerHTML = '<option value="">Loading distributors...</option>';
+      try {
+        const data = await window.GTrackApi.request('/api/v1/distributors');
+        const list = Array.isArray(data.distributors) ? data.distributors : [];
+
+        distributorSelect.innerHTML = '<option value="">Select distributor</option>';
+        list.forEach((item) => {
+          const option = document.createElement('option');
+          option.value = item.name;
+          option.textContent = item.name;
+          distributorSelect.appendChild(option);
+        });
+      } catch (error) {
+        distributorSelect.innerHTML = '<option value="">Enter distributor name manually</option>';
+        const fallback = document.createElement('input');
+        fallback.id = 'distributorFallback';
+        fallback.placeholder = 'Distributor name';
+        fallback.style.marginTop = '8px';
+        fallback.required = true;
+        distributorSelect.insertAdjacentElement('afterend', fallback);
+      }
+    }
+
+    loadDistributors();
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const password = form.password.value;
+      const retrypassword = form.retrypassword.value;
+
+      if (password !== retrypassword) {
+        statusEl.textContent = 'Passwords do not match.';
+        statusEl.style.color = '#ff7f7f';
+        return;
+      }
+
+      const distributorValue = form.distributor.value || (document.getElementById('distributorFallback') ? document.getElementById('distributorFallback').value.trim() : '');
+      if (!distributorValue) {
+        statusEl.textContent = 'Distributor is required.';
+        statusEl.style.color = '#ff7f7f';
+        return;
+      }
+
+      const payload = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        password,
+        retrypassword,
+        consumer_number: form.consumer_number.value.trim(),
+        mobile: form.mobile.value.trim(),
+        address: form.address.value.trim(),
+        state: form.state.value.trim(),
+        district: form.district.value.trim(),
+        device_id: form.device_id.value.trim() || null,
+        distributor: distributorValue,
+      };
+
+      statusEl.textContent = 'Creating account...';
+      statusEl.style.color = '#d3d3d3';
+
+      try {
+        const result = await window.GTrackApi.request('/api/v1/users/register', {
+          method: 'POST',
+          body: payload,
+        });
+
+        window.GTrackApi.saveAuth({
+          role: 'user',
+          token: result.access_token,
+          user_id: result.user_id,
+          name: result.name,
+          email: result.email,
+        });
+
+        statusEl.textContent = 'Account created successfully. Redirecting...';
+        statusEl.style.color = 'var(--lime)';
+        window.location.href = 'dashboard.html';
+      } catch (error) {
+        statusEl.textContent = error.message;
+        statusEl.style.color = '#ff7f7f';
+      }
+    });
+  </script>
+</body>
+</html>
