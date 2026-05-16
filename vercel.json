@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/gtrack_dist/dist/(.*)",
+      "destination": "/gtrack_dist/dist/index.html"
+    }
+  ]
+}
