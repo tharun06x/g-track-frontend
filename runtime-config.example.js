@@ -3,4 +3,4 @@
 // window.GTRACK_API_BASE_URL = "https://g-track-backend-94gv.onrender.com";
 
 window.GTRACK_API_BASE_URL = "http://localhost:8000";
-window.GTRACK_DIST_URL = "./gtrack_dist/dist";
+window.GTRACK_DIST_URL = "./gtrack_dist/dist/index.html";

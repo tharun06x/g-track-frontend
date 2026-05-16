@@ -447,7 +447,10 @@
       adminLoginStatus.style.color = 'var(--lime)';
       const portalUrl = (window.GTRACK_DIST_URL || '').trim();
       if (portalUrl) {
-        window.location.href = `${portalUrl.replace(/\/$/, '')}/#/admin/dashboard`;
+        const normalizedPortalUrl = portalUrl.replace(/\/+$/, '');
+        window.location.href = normalizedPortalUrl.endsWith('.html')
+          ? `${normalizedPortalUrl}#/admin/dashboard`
+          : `${normalizedPortalUrl}/#/admin/dashboard`;
       } else {
         window.location.href = 'admin-distributor-requests.html';
       }

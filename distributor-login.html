@@ -451,7 +451,10 @@
 
       const portalUrl = (window.GTRACK_DIST_URL || '').trim();
       if (portalUrl) {
-        window.location.href = `${portalUrl.replace(/\/$/, '')}/#/dashboard`;
+        const normalizedPortalUrl = portalUrl.replace(/\/+$/, '');
+        window.location.href = normalizedPortalUrl.endsWith('.html')
+          ? `${normalizedPortalUrl}#/dashboard`
+          : `${normalizedPortalUrl}/#/dashboard`;
       } else {
         window.location.href = 'dashboard2.html';
       }
