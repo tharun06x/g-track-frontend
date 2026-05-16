@@ -11,7 +11,7 @@ export default function AdminLayout() {
   const handleLogout = () => {
     clearAuth();
     localStorage.removeItem('gtrack_auth');
-    window.location.href = '../../admin-login.html';
+    navigate('/admin/login');
   };
 
   useEffect(() => {

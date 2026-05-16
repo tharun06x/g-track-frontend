@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { apiRequest, saveAuth } from '../lib/api';
 
 export default function Login() {
@@ -118,9 +118,9 @@ export default function Login() {
 
             <div className="mt-6 text-sm flex flex-col items-center gap-3">
               <div className="w-full flex justify-between items-center text-gray-500">
-                <a href="/admin/login" className="hover:text-gray-800 font-medium transition-colors">
+                <Link to="/admin/login" className="hover:text-gray-800 font-medium transition-colors">
                   Admin Login
-                </a>
+                </Link>
                 <button 
                   onClick={() => { setView('trouble'); setError(''); }} 
                   className="text-blue-600 hover:text-blue-800 hover:underline"
@@ -131,9 +131,9 @@ export default function Login() {
               
               <div className="mt-4 pt-4 border-t w-full text-center">
                 <span className="text-gray-500">Are you a Home Consumer? </span>
-                <a href="/signup" className="text-blue-600 font-semibold hover:underline">
+                <Link to="/signup" className="text-blue-600 font-semibold hover:underline">
                   Register Profile
-                </a>
+                </Link>
               </div>
             </div>
           </>

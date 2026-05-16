@@ -13,7 +13,7 @@ export default function Layout() {
   const handleLogout = () => {
     clearAuth();
     localStorage.removeItem('gtrack_auth');
-    window.location.href = '../../distributor-login.html';
+    navigate('/login');
   };
 
   useEffect(() => {

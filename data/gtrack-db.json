@@ -1,0 +1,167 @@
+{
+  "admins": [
+    {
+      "admin_id": "ADM-1001",
+      "name": "System Administrator",
+      "email": "admin@gtrack.local",
+      "password": "admin12345"
+    }
+  ],
+  "distributors": [
+    {
+      "id": "DIST-001",
+      "name": "ABC Bharatgas Ernakulam",
+      "company_name": "ABC Bharatgas Ernakulam",
+      "email": "distributor@gtrack.local",
+      "phone_no": "+919876543211",
+      "address": "Building No 45/A, MG Road, Ernakulam, Kerala",
+      "state": "Kerala",
+      "district": "Ernakulam",
+      "status": "Active",
+      "password": "dist12345"
+    },
+    {
+      "id": "DIST-002",
+      "name": "XYZ Gas Agency",
+      "company_name": "XYZ Gas Agency",
+      "email": "xyz@gtrack.local",
+      "phone_no": "+919876543212",
+      "address": "12 Kaloor Road, Kochi, Kerala",
+      "state": "Kerala",
+      "district": "Ernakulam",
+      "status": "Inactive",
+      "password": "dist12345"
+    }
+  ],
+  "users": [
+    {
+      "user_id": "USR-1001",
+      "consumer_no": "CN-884920",
+      "name": "Asha Thomas",
+      "email": "consumer@gtrack.local",
+      "password": "user12345",
+      "phone_no": "+919845123456",
+      "address": "Villa 3, Kaloor, Kochi",
+      "state": "Kerala",
+      "district": "Ernakulam",
+      "distributor_id": "DIST-001",
+      "distributor_name": "ABC Bharatgas Ernakulam",
+      "device_id": "DEV-1001",
+      "status": "Active",
+      "cylinder_weight": 14.5
+    },
+    {
+      "user_id": "USR-0002",
+      "consumer_no": "CN-0002",
+      "name": "Riya Menon",
+      "email": "riya.menon@gtrack.local",
+      "password": "user12345",
+      "phone_no": "+919800000001",
+      "address": "12 Marine Drive, Kochi",
+      "state": "Kerala",
+      "district": "Ernakulam",
+      "distributor_id": "DIST-001",
+      "distributor_name": "ABC Bharatgas Ernakulam",
+      "device_id": "DEV-0002",
+      "status": "Active",
+      "cylinder_weight": 14.5
+    }
+  ],
+  "distributorRequests": [
+    {
+      "request_id": "REQ-504",
+      "name": "DEF Distributors",
+      "company_name": "DEF Distributors",
+      "email": "contact@def.in",
+      "phone_no": "9845123999",
+      "address": "MG Road, Kochi",
+      "state": "Kerala",
+      "district": "Ernakulam",
+      "reason": "Need onboarding for a new delivery area.",
+      "requested_at": "2026-05-16T15:56:33.854Z",
+      "status": "pending",
+      "review_comment": null
+    }
+  ],
+  "loginTroubleRequests": [],
+  "refillRequests": [
+    {
+      "request_id": "RF-9001",
+      "user_id": "USR-1001",
+      "distributor_id": "DIST-001",
+      "requested_date": "2026-05-16T13:26:33.854Z",
+      "status": "pending",
+      "action_by": null,
+      "reviewed_at": null
+    },
+    {
+      "request_id": "RF-9000",
+      "user_id": "USR-1001",
+      "distributor_id": "DIST-001",
+      "requested_date": "2026-05-02T17:26:33.855Z",
+      "status": "approved",
+      "action_by": "DIST-001",
+      "reviewed_at": "2026-05-16T07:26:33.856Z"
+    }
+  ],
+  "complaints": [
+    {
+      "id": "CMP-101",
+      "user_id": "USR-1001",
+      "distributor_id": "DIST-001",
+      "date": "2026-05-13T17:26:33.856Z",
+      "category": "Delivery Delay",
+      "description": "Refill not delivered after 3 days of booking.",
+      "status": "Open",
+      "remark": ""
+    }
+  ],
+  "settings": {
+    "USR-1001": {
+      "threshold_limit": 20,
+      "auto_delivery": true,
+      "language": "en-US",
+      "timezone": "IST"
+    },
+    "USR-0002": {
+      "threshold_limit": 20,
+      "auto_delivery": true,
+      "language": "en-US",
+      "timezone": "IST"
+    }
+  },
+  "sessions": [
+    {
+      "token": "c1badc73-668b-4a6c-91b3-b7f9dd39b3f6",
+      "role": "user",
+      "subjectId": "USR-1001",
+      "email": "consumer@gtrack.local",
+      "name": "Asha Thomas",
+      "created_at": "2026-05-16T17:27:05.423Z"
+    },
+    {
+      "token": "fafb2cdd-fe35-4708-8740-5b9ec59fccfd",
+      "role": "user",
+      "subjectId": "USR-1001",
+      "email": "consumer@gtrack.local",
+      "name": "Asha Thomas",
+      "created_at": "2026-05-16T17:27:16.196Z"
+    },
+    {
+      "token": "246f297b-4d51-4554-8cc4-99ffed72d519",
+      "role": "admin",
+      "subjectId": "ADM-1001",
+      "email": "admin@gtrack.local",
+      "name": "System Administrator",
+      "created_at": "2026-05-16T17:27:25.915Z"
+    },
+    {
+      "token": "97718333-11c8-422f-8931-45012eecd9a7",
+      "role": "user",
+      "subjectId": "USR-0002",
+      "email": "riya.menon@gtrack.local",
+      "name": "Riya Menon",
+      "created_at": "2026-05-16T17:30:00.695Z"
+    }
+  ]
+}
