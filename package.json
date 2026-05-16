@@ -5,7 +5,8 @@
   "main": "script.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "vite"
+    "dev": "vite",
+    "build": "cd gtrack_dist && npm install && npm run build"
   },
   "keywords": [],
   "author": "",
