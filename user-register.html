@@ -194,6 +194,7 @@
           const displayName = item.name || item.id || 'Unknown Distributor';
           const displayId = item.id ? ` (${item.id})` : '';
           option.value = item.name || item.id || '';
+          option.dataset.id = item.id || '';
           option.textContent = `${displayName}${displayId}`;
           distributorSelect.appendChild(option);
         });
@@ -221,8 +222,17 @@
         return;
       }
 
-      const distributorValue = form.distributor.value || (document.getElementById('distributorFallback') ? document.getElementById('distributorFallback').value.trim() : '');
-      if (!distributorValue) {
+      const fallbackInput = document.getElementById('distributorFallback');
+      const selectedOption = distributorSelect.options[distributorSelect.selectedIndex];
+      const fallbackValue = fallbackInput ? fallbackInput.value.trim() : '';
+      const distributorName = (selectedOption && selectedOption.value)
+        ? selectedOption.value.trim()
+        : fallbackValue;
+      const distributorId = (selectedOption && selectedOption.dataset && selectedOption.dataset.id)
+        ? selectedOption.dataset.id
+        : '';
+
+      if (!distributorName) {
         statusEl.textContent = 'Distributor is required.';
         statusEl.style.color = '#ff7f7f';
         return;
@@ -233,13 +243,17 @@
         email: form.email.value.trim(),
         password,
         retrypassword,
+        retry_password: retrypassword,
         consumer_number: form.consumer_number.value.trim(),
         mobile: form.mobile.value.trim(),
+        phone_no: form.mobile.value.trim(),
         address: form.address.value.trim(),
         state: form.state.value.trim(),
         district: form.district.value.trim(),
         device_id: form.device_id.value.trim() || null,
-        distributor: distributorValue,
+        distributor: distributorName,
+        distributor_name: distributorName || null,
+        distributor_id: distributorId || null,
       };
 
       statusEl.textContent = 'Creating account...';
