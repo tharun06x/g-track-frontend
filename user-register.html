@@ -181,13 +181,20 @@
       distributorSelect.innerHTML = '<option value="">Loading distributors...</option>';
       try {
         const data = await window.GTrackApi.request('/api/v1/distributors');
-        const list = Array.isArray(data.distributors) ? data.distributors : [];
+        const list = Array.isArray(data)
+          ? data
+          : (Array.isArray(data.distributors) ? data.distributors : []);
 
         distributorSelect.innerHTML = '<option value="">Select distributor</option>';
         list.forEach((item) => {
+          if (!item || (!item.name && !item.id)) {
+            return;
+          }
           const option = document.createElement('option');
-          option.value = item.name;
-          option.textContent = item.name;
+          const displayName = item.name || item.id || 'Unknown Distributor';
+          const displayId = item.id ? ` (${item.id})` : '';
+          option.value = item.name || item.id || '';
+          option.textContent = `${displayName}${displayId}`;
           distributorSelect.appendChild(option);
         });
       } catch (error) {
