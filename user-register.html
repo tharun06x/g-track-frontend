@@ -242,19 +242,19 @@
         name: form.name.value.trim(),
         email: form.email.value.trim(),
         password,
-        retrypassword,
         retry_password: retrypassword,
         consumer_number: form.consumer_number.value.trim(),
         mobile: form.mobile.value.trim(),
-        phone_no: form.mobile.value.trim(),
         address: form.address.value.trim(),
         state: form.state.value.trim(),
         district: form.district.value.trim(),
-        device_id: form.device_id.value.trim() || null,
         distributor: distributorName,
-        distributor_name: distributorName || null,
-        distributor_id: distributorId || null,
       };
+
+      const deviceId = form.device_id.value.trim();
+      if (deviceId) {
+        payload.device_id = deviceId;
+      }
 
       statusEl.textContent = 'Creating account...';
       statusEl.style.color = '#d3d3d3';
