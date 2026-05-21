@@ -65,10 +65,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         gasWeightFillEl.style.backgroundColor = normalizedWidth <= 20 ? '#ff3a3a' : 'var(--black)';
       }
 
-      if (summary.predicted_empty_date && refillDayEl && refillMonthTextEl) {
-        const refillDate = new Date(summary.predicted_empty_date);
+      let predictedDate = summary.predicted_empty_date;
+      
+      // Fallback to data-overview if dashboard summary lacks predicted date but gas remains
+      if (!predictedDate && remainingGas > 0) {
+        try {
+          const overview = await window.GTrackApi.request(`/api/v1/reports/device/data-overview?device_id=${encodeURIComponent(me.device_id)}`, { method: 'GET' });
+          const consumption = overview?.latest_feature?.rolling_7day_avg_consumption || 0.8;
+          if (consumption > 0) {
+            const daysLeft = remainingGas / consumption;
+            const date = new Date();
+            date.setDate(date.getDate() + Math.round(daysLeft));
+            predictedDate = date.toISOString();
+          }
+        } catch (e) {
+          console.warn('Fallback predicted date calculation failed', e);
+        }
+      }
+
+      if (predictedDate && refillDayEl && refillMonthTextEl) {
+        const refillDate = new Date(predictedDate);
         refillDayEl.textContent = String(refillDate.getDate());
         refillMonthTextEl.innerHTML = `<strong>${refillDate.toLocaleDateString('en-US', { weekday: 'short' })},</strong><br>${refillDate.toLocaleDateString('en-US', { month: 'long' })}`;
+      } else if (refillDayEl && refillMonthTextEl) {
+        refillDayEl.textContent = '--';
+        refillMonthTextEl.innerHTML = `<strong>No usage</strong><br>detected`;
       }
     } else {
       if (gasWeightValueEl) {

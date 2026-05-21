@@ -52,20 +52,20 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Load monthly and yearly gas stats in parallel
-      const [overview, monthlyStats, yearlyStats, refills] = await Promise.all([
+      // Load daily, monthly stats, and refills in parallel
+      const [overview, dailyStats, monthlyStats, refills] = await Promise.all([
         safeRequest(`/api/v1/reports/device/data-overview?device_id=${encodeURIComponent(userDeviceId)}`),
+        safeRequest(`/api/v1/reports/gas-usage/stats?device_id=${encodeURIComponent(userDeviceId)}&granularity=daily&month=${new Date().getMonth() + 1}&year=${new Date().getFullYear()}`, { method: 'GET' }),
         safeRequest(`/api/v1/reports/gas-usage/stats?device_id=${encodeURIComponent(userDeviceId)}&granularity=monthly&year=${new Date().getFullYear()}`, { method: 'GET' }),
-        safeRequest(`/api/v1/reports/gas-usage/stats?device_id=${encodeURIComponent(userDeviceId)}&granularity=yearly`, { method: 'GET' }),
         safeRequest(`/api/v1/refill/user/${encodeURIComponent(userId)}`, { method: 'GET' }),
       ]);
 
       // Update banner stats
-      updateBannerStats(overview, refills);
+      updateBannerStats(overview, refills, monthlyStats);
 
-      // Update yearly trend
-      if (yearlyStats) {
-        updateYearlyTrendChart(yearlyStats);
+      // Update yearly trend using monthlyStats (for 12 months)
+      if (monthlyStats) {
+        updateYearlyTrendChart(monthlyStats);
       }
 
       // Update alerts
@@ -74,9 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Update sensor table
       updateSensorTable(overview);
 
-      // Update analytics chart (using monthly data)
-      if (monthlyStats) {
-        updateAnalyticsChart(monthlyStats);
+      // Update analytics chart (using daily data)
+      if (dailyStats) {
+        updateAnalyticsChart(dailyStats);
       }
     } catch (error) {
       showToast(`Failed to load report: ${error.message}`, 'error');
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function updateBannerStats(overview, refills) {
+  function updateBannerStats(overview, refills, monthlyStats) {
     // Total deliveries (refill requests count)
     if (elements.totalDeliveries) {
       const total = Array.isArray(refills) ? refills.length : 0;
@@ -106,42 +106,55 @@ document.addEventListener('DOMContentLoaded', () => {
       elements.activeSensors.textContent = overview?.has_live_sensor_data ? '1' : '0';
     }
 
-    // Total gas usage (lifecycle count from synthetic device or estimated)
+    // Total gas usage (lifecycle count or sum of monthly data)
     if (elements.totalGasUsage) {
-      const lifecycleCount = overview?.synthetic_device?.lifecycle_count || 0;
-      const estimatedUsage = lifecycleCount * 12;
-      elements.totalGasUsage.textContent = `${estimatedUsage} kg`;
+      let totalUsage = 0;
+      if (overview?.synthetic_device?.lifecycle_count > 0) {
+        totalUsage = overview.synthetic_device.lifecycle_count * 12;
+      } else if (Array.isArray(monthlyStats) && monthlyStats.length > 0) {
+        totalUsage = monthlyStats.reduce((sum, m) => sum + (Number(m.usage) || 0), 0);
+      }
+      elements.totalGasUsage.textContent = `${Math.round(totalUsage)} kg`;
     }
   }
 
-  function updateAnalyticsChart(monthlyStats) {
+  function updateAnalyticsChart(dailyStats) {
     if (!elements.analyticsAvg) return;
 
-    const months = Array.isArray(monthlyStats) ? monthlyStats : [];
-    if (months.length === 0) return;
-
-    // Calculate average
-    const avgUsage = months.reduce((sum, m) => sum + (Number(m.usage) || 0), 0) / months.length;
-    elements.analyticsAvg.textContent = `${Math.round(avgUsage)} kg avg`;
-
-    // Generate SVG paths based on data
-    const maxUsage = Math.max(...months.map((m) => Number(m.usage) || 0), 1);
-    const points = months.map((m, i) => {
-      const x = (i / (months.length - 1 || 1)) * 1000;
-      const y = 180 - (Number(m.usage) / maxUsage) * 120;
-      return `${x},${y}`;
-    }).join(' ');
-
-    if (elements.analyticsLine) {
-      // Create smooth curve through points
-      const smoothPath = generateSmoothPath(points);
-      elements.analyticsLine.setAttribute('d', `${smoothPath}`);
+    const dataPoints = Array.isArray(dailyStats) ? dailyStats : [];
+    if (dataPoints.length === 0) {
+      elements.analyticsAvg.textContent = `0 kg avg`;
+      if (elements.analyticsLine) elements.analyticsLine.removeAttribute('d');
+      if (elements.analyticsArea) elements.analyticsArea.removeAttribute('d');
+      return;
     }
 
-    if (elements.analyticsArea) {
-      const smoothPath = generateSmoothPath(points);
-      const areaPath = `${smoothPath} L1000,200 L0,200 Z`;
-      elements.analyticsArea.setAttribute('d', areaPath);
+    // Calculate average
+    const avgUsage = dataPoints.reduce((sum, d) => sum + (Number(d.usage) || 0), 0) / dataPoints.length;
+    elements.analyticsAvg.textContent = `${avgUsage.toFixed(1)} kg/day`;
+
+    // Try to draw a very simple curve based on data points
+    const maxVal = Math.max(...dataPoints.map((d) => Number(d.usage) || 0), 1);
+    const width = 1000;
+    const height = 160;
+    const padding = 20;
+
+    let points = '';
+    dataPoints.forEach((d, i) => {
+      const x = (i / (dataPoints.length - 1 || 1)) * width;
+      const y = height - padding - ((Number(d.usage) || 0) / maxVal) * (height - 2 * padding);
+      points += `${x},${y} `;
+    });
+
+    if (points) {
+      const d = generateSmoothPath(points.trim());
+      if (d) {
+        if (elements.analyticsLine) elements.analyticsLine.setAttribute('d', d);
+        if (elements.analyticsArea) elements.analyticsArea.setAttribute('d', `${d} L1000,200 L0,200 Z`);
+      } else {
+        if (elements.analyticsLine) elements.analyticsLine.removeAttribute('d');
+        if (elements.analyticsArea) elements.analyticsArea.removeAttribute('d');
+      }
     }
   }
 
@@ -188,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
     trendCols.forEach((col, idx) => {
       const monthNum = idx + 1;
       const usage = usageByMonth.get(monthNum) || 0;
-      const percentHeight = (usage / maxUsage) * 100;
+      const percentHeight = yearlyData.length === 0 ? 0 : (usage / maxUsage) * 100;
 
       const bar = col.querySelector('.trend-bar');
       if (bar) {

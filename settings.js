@@ -76,6 +76,9 @@ async function initializeSettings() {
     // Set up auto-delivery toggle
     setupAutoDeliveryToggle(user_id, token);
 
+    // Set up threshold editor
+    setupThresholdEditor(user_id, token);
+
     // Check for tab parameter in URL
     const urlParams = new URLSearchParams(window.location.search);
     const tabToOpen = urlParams.get('tab');
@@ -102,6 +105,11 @@ async function safeRequest(url, options = {}) {
     });
 
     if (!response.ok) {
+      if (response.status === 401) {
+        localStorage.removeItem("gtrack_auth");
+        window.location.href = '/index.html';
+        return null;
+      }
       const errorData = await response.json().catch(() => ({}));
       console.error(`API Error: ${response.status}`, errorData);
       return null;
@@ -225,6 +233,16 @@ function populateSettingsForm(settings) {
       autoDeliveryToggle.classList.add('bg-grey');
       autoDeliveryToggle.innerHTML = 'Disabled <i class="ph-bold ph-x"></i>';
     }
+  }
+
+  // Refill threshold
+  const thresholdInput = document.getElementById('threshold-input');
+  const thresholdDisplay = document.getElementById('threshold-current-display');
+  if (thresholdInput && settings.threshold_limit != null) {
+    thresholdInput.value = settings.threshold_limit;
+  }
+  if (thresholdDisplay && settings.threshold_limit != null) {
+    thresholdDisplay.textContent = `${settings.threshold_limit}%`;
   }
 
   console.log('Settings form populated');
@@ -392,6 +410,42 @@ async function updateUserSettings(userId, token, updates) {
   const result = await response.json();
   console.log('Settings updated:', result);
   return result;
+}
+
+// Setup refill threshold editor
+function setupThresholdEditor(userId, token) {
+  const saveBtn = document.getElementById('threshold-save-btn');
+  const thresholdInput = document.getElementById('threshold-input');
+  const thresholdDisplay = document.getElementById('threshold-current-display');
+
+  if (!saveBtn || !thresholdInput) return;
+
+  saveBtn.addEventListener('click', async () => {
+    const raw = parseFloat(thresholdInput.value);
+    if (isNaN(raw) || raw < 0.5 || raw > 100) {
+      showErrorToast('Please enter a valid threshold between 0.5% and 100%');
+      return;
+    }
+
+    saveBtn.disabled = true;
+    const orig = saveBtn.textContent;
+    saveBtn.textContent = 'Saving...';
+
+    try {
+      const result = await updateUserSettings(userId, token, { threshold_limit: raw });
+      if (result) {
+        if (thresholdDisplay) thresholdDisplay.textContent = `${raw}%`;
+        showSuccessToast(`Refill threshold updated to ${raw}%`);
+      } else {
+        showErrorToast('Failed to update threshold');
+      }
+    } catch (err) {
+      showErrorToast(`Error: ${err.message}`);
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = orig;
+    }
+  });
 }
 
 // Setup notification toggles

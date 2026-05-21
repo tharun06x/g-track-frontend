@@ -11,14 +11,14 @@ export default function AdminLayout() {
   const handleLogout = () => {
     clearAuth();
     localStorage.removeItem('gtrack_auth');
-    navigate('/admin/login');
+    window.location.href = '../../admin-login.html';
   };
 
   useEffect(() => {
     if (!auth || auth.role !== 'admin' || !auth.token) {
-      navigate('/admin/login');
+      window.location.href = '../../admin-login.html';
     }
-  }, [auth, navigate]);
+  }, [auth]);
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">

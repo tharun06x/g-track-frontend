@@ -67,13 +67,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Real-time Arc Gauge Monitoring Simulation
+  // Real-time Arc Gauge Monitoring API Integration
   const gasWeightValue = document.getElementById('gas-weight-value2');
   const gasWeightFill = document.getElementById('gauge-fill2');
   const gaugePointer = document.getElementById('gauge-pointer');
   
   if (gasWeightValue && gasWeightFill && gaugePointer) {
-    let currentWeight = 11.4;
     const maxCapacity = 14; // in kg
     const pathLength = 251.3;
     
@@ -83,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateGauge(weight) {
       gasWeightValue.textContent = `${weight.toFixed(1)} kg`;
       
-      const percentage = weight / maxCapacity;
+      const percentage = Math.max(0, Math.min(1, weight / maxCapacity));
       const offset = pathLength * (1 - percentage);
       gasWeightFill.style.strokeDashoffset = offset;
       
@@ -102,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
       gaugePointer.style.transformOrigin = '0px 0px';
       gaugePointer.style.transform = `rotate(${rotation}deg)`;
       
-      if (percentage > 0.85) {
+      if (percentage < 0.2) {
         gasWeightFill.style.stroke = '#ff3a3a'; 
         gasWeightValue.style.color = '#ff3a3a';
       } else {
@@ -111,33 +110,34 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Set to 0 instantly
+    // Set to 0 instantly for entrance animation
     gasWeightFill.style.transition = 'none';
     gaugePointer.style.transition = 'none';
     updateGauge(0);
+    void gasWeightFill.getBoundingClientRect(); // reflow
 
-    // Force a reflow
-    void gasWeightFill.getBoundingClientRect();
-
-    // Enable slower transition for the initial load animation
+    // Setup transitions
     gasWeightFill.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.34, 1.56, 0.64, 1), stroke 0.6s ease';
     gaugePointer.style.transition = 'transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+
+    // Fetch API Data
+    async function fetchLiveData() {
+      try {
+        const auth = window.GTrackApi.readAuth();
+        if (!auth || !auth.token) return;
+
+        const me = await window.GTrackApi.request('/api/v1/users/me', { token: auth.token });
+        if (!me.device_id) return;
+
+        const summary = await window.GTrackApi.request(`/api/v1/dashboard/summary?device_id=${encodeURIComponent(me.device_id)}`);
+        
+        const currentWeight = Number(summary.remaining_gas || 0);
+        updateGauge(currentWeight);
+      } catch (err) {
+        console.error('Failed to fetch dashboard2 gauge data:', err);
+      }
+    }
     
-    // Trigger animation to current weight
-    setTimeout(() => {
-      updateGauge(currentWeight);
-    }, 100);
-    
-    // Resume random interval variations with normal transition speed
-    setInterval(() => {
-      const change = (Math.random() * 0.2) - 0.1; 
-      currentWeight = Math.max(0, Math.min(maxCapacity, currentWeight + change));
-      
-      // Keep standard update speed for tick variations
-      gasWeightFill.style.transition = 'stroke-dashoffset 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), stroke 0.6s ease';
-      gaugePointer.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
-      
-      updateGauge(currentWeight);
-    }, 2000);
+    setTimeout(fetchLiveData, 100);
   }
 });

@@ -102,14 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function updateDaysRemaining(predictedDate, remainingWeight) {
+  function updateDaysRemaining(predictedDate, remainingWeight, overview) {
     let days = 0;
     if (predictedDate) {
       const now = new Date();
       const target = new Date(predictedDate);
       days = Math.max(0, Math.ceil((target - now) / (24 * 60 * 60 * 1000)));
     } else if (remainingWeight > 0) {
-      days = Math.round(remainingWeight / 0.8);
+      const consumption = overview?.latest_feature?.rolling_7day_avg_consumption || 0.8;
+      days = Math.round(remainingWeight / consumption);
     }
 
     elements.daysRemaining.textContent = String(days);
@@ -298,22 +299,17 @@ document.addEventListener('DOMContentLoaded', () => {
         safeRequest(`/api/v1/reports/device/data-overview?device_id=${encodeURIComponent(me.device_id)}`, { method: 'GET' }),
         safeRequest(`/api/v1/dashboard/summary?device_id=${encodeURIComponent(me.device_id)}`, { method: 'GET' }),
         safeRequest(`/api/v1/reports/cylinder/remaining-weight?device_id=${encodeURIComponent(me.device_id)}`, { method: 'GET' }),
-        safeRequest(`/api/v1/reports/gas-usage/stats?device_id=${encodeURIComponent(me.device_id)}&granularity=daily&month=${now.getMonth() + 1}&year=${now.getFullYear()}`, { method: 'GET' }),
+        safeRequest(`/api/v1/reports/gas-usage/stats?device_id=${encodeURIComponent(me.device_id)}&granularity=daily&year=${now.getFullYear()}`, { method: 'GET' }),
         safeRequest(`/api/v1/reports/gas-usage/stats?device_id=${encodeURIComponent(me.device_id)}&granularity=monthly&year=${now.getFullYear()}`, { method: 'GET' }),
         safeRequest(`/api/v1/settings/${encodeURIComponent(me.user_id)}`, { method: 'GET', token: auth.token }),
         safeRequest(`/api/v1/refill/user/${encodeURIComponent(me.user_id)}`, { method: 'GET' }),
       ]);
 
-      const currentWeight = Number(
-        weightData?.remaining_weight
-        ?? summary?.remaining_gas
-        ?? overview?.live_latest?.current_weight
-        ?? 0
-      );
+      const currentWeight = Number(weightData?.remaining_weight || summary?.remaining_gas || 0);
       const featureDailyUsage = Number(overview?.latest_feature?.consumption_per_day);
 
       updateGauge(currentWeight);
-      updateDaysRemaining(summary?.predicted_empty_date, currentWeight);
+      updateDaysRemaining(summary?.predicted_empty_date, currentWeight, overview);
       updateSyntheticMeta(overview);
       updateConsumptionRating(
         Number(summary?.gas_used_today || 0),

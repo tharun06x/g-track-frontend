@@ -40,6 +40,11 @@ async function safeRequest(url, options = {}) {
     });
 
     if (!response.ok) {
+      if (response.status === 401) {
+        localStorage.removeItem("gtrack_auth");
+        window.location.href = '/index.html';
+        return null;
+      }
       console.error(`API Error: ${response.status} ${response.statusText}`);
       return null;
     }

@@ -1,30 +1,48 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PhoneCall, Mail, LifeBuoy, ShieldAlert, AlertCircle, CheckCircle } from 'lucide-react';
-import { useAppContext } from '../context/AppContext';
+import { apiRequest, readAuth } from '../lib/api';
 
 export default function Help() {
-  const { currentDistributor, distributors, addLoginRequest } = useAppContext();
+  const [activeDistInfo, setActiveDistInfo] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
-  // Retrieve active distributor's profile to pass to admin
-  const activeDistInfo = distributors.find(d => d.id === currentDistributor);
+  useEffect(() => {
+    async function fetchDistributor() {
+      try {
+        const auth = readAuth();
+        if (!auth || !auth.token) return;
+        
+        // Use /me to get active dist info
+        const me = await apiRequest('/api/v1/distributors/me', {
+          token: auth.token
+        });
+        setActiveDistInfo(me);
+      } catch (err) {
+        console.error('Failed to load distributor details for Help page:', err);
+      }
+    }
+    fetchDistributor();
+  }, []);
 
-  const handleTroubleLogin = () => {
+  const handleTroubleLogin = async () => {
     if (!activeDistInfo) return;
+    setErrorMsg('');
 
-    const newRequest = {
-      id: `REQ-${Math.floor(Math.random() * 1000)}`,
-      distId: activeDistInfo.id,
-      distName: activeDistInfo.name,
-      date: new Date().toISOString().split('T')[0],
-      issue: 'Authenticated Account - Trouble Login / Sync Issue',
-      status: 'Pending',
-      email: activeDistInfo.email,
-      phone: activeDistInfo.phone
-    };
-
-    addLoginRequest(newRequest);
-    setSubmitted(true);
+    try {
+      await apiRequest('/api/v1/admin/login-trouble-request', {
+        method: 'POST',
+        body: {
+          email: activeDistInfo.email,
+          phone: activeDistInfo.phone_no,
+          issue: 'Authenticated Account - Trouble Login / Sync Issue',
+          distId: activeDistInfo.distributor_id || activeDistInfo.id
+        }
+      });
+      setSubmitted(true);
+    } catch (err) {
+      setErrorMsg(err.message || 'Failed to submit trouble request');
+    }
   };
 
   return (
@@ -80,9 +98,15 @@ export default function Help() {
             </p>
            
             <div className="text-xs text-gray-400 bg-gray-50 p-2 rounded border border-gray-100 flex gap-4">
-              <span><strong>Sending Dist ID:</strong> {activeDistInfo?.id || 'Unknown'}</span>
+              <span><strong>Sending Dist ID:</strong> {activeDistInfo?.distributor_id || activeDistInfo?.id || 'Unknown'}</span>
               <span><strong>Contact:</strong> {activeDistInfo?.email || 'N/A'}</span>
             </div>
+            
+            {errorMsg && (
+              <div className="mt-3 text-sm text-red-500 font-medium">
+                {errorMsg}
+              </div>
+            )}
           </div>
           <div className="flex-shrink-0">
             {submitted ? (

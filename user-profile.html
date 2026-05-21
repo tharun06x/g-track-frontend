@@ -38,36 +38,40 @@
 
       <div class="card bg-white" style="padding: 0; overflow: hidden;">
         <div style="display: flex; align-items: center; justify-content: space-between; padding: 24px 28px; border-bottom: 1px solid var(--grey);">
-          <h2 style="margin: 0; font-size: 1.6rem;">Welcome ABC Bharatgas Ernakulam</h2>
+          <h2 style="margin: 0; font-size: 1.6rem;" id="profile-welcome">Welcome...</h2>
           <div class="icon-circle bg-grey text-black"><i class="ph ph-user"></i></div>
         </div>
 
         <div style="display: grid; grid-template-columns: 240px 1fr; border-bottom: 1px solid var(--grey);">
           <div style="padding: 14px 20px; font-weight: 600; background: rgba(0,0,0,0.02);">Distributor ID</div>
-          <div style="padding: 14px 20px;">DST-1001</div>
+          <div style="padding: 14px 20px;" id="profile-id">--</div>
         </div>
         <div style="display: grid; grid-template-columns: 240px 1fr; border-bottom: 1px solid var(--grey);">
           <div style="padding: 14px 20px; font-weight: 600;">Email</div>
-          <div style="padding: 14px 20px;">agency@example.com</div>
+          <div style="padding: 14px 20px;" id="profile-email">--</div>
         </div>
         <div style="display: grid; grid-template-columns: 240px 1fr; border-bottom: 1px solid var(--grey);">
           <div style="padding: 14px 20px; font-weight: 600; background: rgba(0,0,0,0.02);">Cell phone</div>
-          <div style="padding: 14px 20px;">+91 98765 12345</div>
+          <div style="padding: 14px 20px;" id="profile-phone">--</div>
         </div>
         <div style="display: grid; grid-template-columns: 240px 1fr; border-bottom: 1px solid var(--grey);">
           <div style="padding: 14px 20px; font-weight: 600;">Address</div>
-          <div style="padding: 14px 20px;">MG Road, Ernakulam</div>
+          <div style="padding: 14px 20px;" id="profile-address">--</div>
         </div>
         <div style="display: grid; grid-template-columns: 240px 1fr; border-bottom: 1px solid var(--grey);">
           <div style="padding: 14px 20px; font-weight: 600; background: rgba(0,0,0,0.02);">State</div>
-          <div style="padding: 14px 20px;">Kerala</div>
+          <div style="padding: 14px 20px;" id="profile-state">--</div>
         </div>
         <div style="display: grid; grid-template-columns: 240px 1fr;">
           <div style="padding: 14px 20px; font-weight: 600;">District</div>
-          <div style="padding: 14px 20px;">Ernakulam</div>
+          <div style="padding: 14px 20px;" id="profile-district">--</div>
         </div>
       </div>
     </main>
   </div>
+  
+  <script src="runtime-config.js"></script>
+  <script src="auth-api.js"></script>
+  <script src="user-profile.js"></script>
 </body>
 </html>

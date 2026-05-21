@@ -13,7 +13,7 @@ export default function Layout() {
   const handleLogout = () => {
     clearAuth();
     localStorage.removeItem('gtrack_auth');
-    navigate('/login');
+    window.location.href = '../../distributor-login.html';
   };
 
   useEffect(() => {
@@ -28,9 +28,9 @@ export default function Layout() {
 
   useEffect(() => {
     if (!auth || auth.role !== 'distributor' || !auth.token) {
-      navigate('/login');
+      window.location.href = '../../distributor-login.html';
     }
-  }, [auth, navigate]);
+  }, [auth]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">

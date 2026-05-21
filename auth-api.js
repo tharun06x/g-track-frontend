@@ -1,6 +1,6 @@
 (function () {
   const baseFromRuntime = (window.GTRACK_API_BASE_URL || "").trim();
-  const API_BASE_URL = (baseFromRuntime || "http://localhost:8000").replace(/\/+$/, "");
+  const API_BASE_URL = (baseFromRuntime || "https://g-track-backend-94gv.onrender.com").replace(/\/+$/, "");
 
   function getHeaders(token) {
     const headers = {
@@ -33,6 +33,12 @@
     }
 
     if (!response.ok) {
+      if (response.status === 401) {
+        clearAuth();
+        window.location.href = '/index.html';
+        throw new Error("Session expired. Please log in again.");
+      }
+
       let message = `Request failed (${response.status})`;
 
       if (data) {

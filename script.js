@@ -90,50 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Real-time Gas Weight Monitoring Simulation
-  const gasWeightValue = document.getElementById('gas-weight-value');
-  const gasWeightFill = document.getElementById('gas-weight-fill');
-  const useLiveDashboardData = Boolean(window.__GTRACK_LIVE_DASHBOARD__);
-  
-  if (gasWeightValue && gasWeightFill && !useLiveDashboardData) {
-    let currentWeight = 11.4;
-    const maxCapacity = 14; // in kg
-    
-    const updateRefillPrediction = (weight) => {
-      const refillDayEl = document.getElementById('refill-day');
-      const refillMonthEl = document.getElementById('refill-month-text');
-      if (refillDayEl && refillMonthEl) {
-         // Calculate predicted refill date based on usage history average (mocked to 5.2 kg/day)
-         const avgDailyUsage = 0.8; 
-         const daysRemaining = Math.max(0, weight / avgDailyUsage);
-         
-         const refillDate = new Date();
-         refillDate.setDate(refillDate.getDate() + Math.ceil(daysRemaining));
-         
-         refillDayEl.textContent = refillDate.getDate();
-         refillMonthEl.innerHTML = `<strong>${refillDate.toLocaleDateString('en-US', { weekday: 'short' })},</strong><br>${refillDate.toLocaleDateString('en-US', { month: 'long' })}`;
-      }
-    };
-    
-    updateRefillPrediction(currentWeight);
-
-    // Update every 2 seconds
-    setInterval(() => {
-      const change = (Math.random() * 0.2) - 0.1;
-      currentWeight = Math.max(0, Math.min(maxCapacity, currentWeight + change));
-      
-      gasWeightValue.textContent = `${currentWeight.toFixed(1)} kg`;
-      gasWeightFill.style.width = `${(currentWeight / maxCapacity) * 100}%`;
-      
-      if (currentWeight > maxCapacity * 0.8) {
-        gasWeightFill.style.backgroundColor = '#ff3a3a'; 
-      } else {
-        gasWeightFill.style.backgroundColor = 'var(--black)'; 
-      }
-      
-      updateRefillPrediction(currentWeight);
-    }, 2000);
-  }
+  // Real-time Gas Weight Monitoring Simulation has been removed.
+  // The application strictly relies on user-dashboard-api.js for live telemetry.
 
   // Interactive Calendar inside Report Dashboard
   const reportCalCells = document.querySelectorAll('.cal-cell:not(.old-month)');
@@ -243,8 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. Usage History Bars Syncer
   const usageBars = document.querySelectorAll('.bar-container .bar-col');
   const currentNumDay = today.getDate();
-  if (!useLiveDashboardData) {
-    usageBars.forEach((col, index) => {
+  usageBars.forEach((col, index) => {
     const day = index + 1; // 1 to 30
     const innerBar = col.querySelector('.bar');
     if (!innerBar) return;
@@ -261,38 +218,18 @@ document.addEventListener('DOMContentLoaded', () => {
       col.classList.remove('future-col');
       if (innerBar.classList.contains('bar-future')) {
          innerBar.className = 'bar bar-green'; 
-         innerBar.style.height = '30%'; // random mock
-         col.setAttribute('data-tooltip', `${today.toLocaleDateString('en-US', { month: 'short' })} ${day} (mocked)`);
+         innerBar.style.height = '30%'; 
+         col.setAttribute('data-tooltip', `${today.toLocaleDateString('en-US', { month: 'short' })} ${day}`);
       }
 
-      // If it's today's bar, make it LIVE
+      // If it's today's bar
       if (day === currentNumDay) {
         col.id = 'live-bar-col';
         innerBar.id = 'live-bar-fill';
-        innerBar.style.transition = 'height 0.5s ease-out, background-color 0.5s ease';
-        
-        let currentHeight = parseFloat(innerBar.style.height) || 50;
-        
-        // Ensure tooltip updates to say Live
-        col.setAttribute('data-tooltip', `${today.toLocaleDateString('en-US', { month: 'short' })} ${day} • Live`);
-        
-        setInterval(() => {
-           // Fluctuate the height by -5 to +5 %
-           const change = (Math.random() * 10) - 5;
-           currentHeight = Math.max(10, Math.min(95, currentHeight + change));
-           innerBar.style.height = `${currentHeight}%`;
-           
-           // Color logic (mock thresholds)
-           if (currentHeight > 50) {
-             innerBar.className = 'bar bar-red';
-           } else {
-             innerBar.className = 'bar bar-green';
-           }
-        }, 3000);
+        col.setAttribute('data-tooltip', `${today.toLocaleDateString('en-US', { month: 'short' })} ${day}`);
       }
     }
-    });
-  }
+  });
 
   // --- Yearly Trend Animation (Intersection Observer) ---
   const trendBars = document.querySelectorAll('.trend-bar');
