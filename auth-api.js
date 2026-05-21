@@ -21,15 +21,21 @@
       body: options.body ? JSON.stringify(options.body) : undefined,
     });
 
-    let data;
-    try {
-      data = await response.json();
-    } catch {
-      data = null;
+    const raw = await response.text();
+    let data = null;
+
+    if (raw) {
+      try {
+        data = JSON.parse(raw);
+      } catch {
+        data = { detail: raw };
+      }
     }
 
     if (!response.ok) {
-      const message = data && data.detail ? data.detail : `Request failed (${response.status})`;
+      const message = (data && (data.detail || data.message || data.error))
+        ? (data.detail || data.message || data.error)
+        : `Request failed (${response.status})`;
       throw new Error(message);
     }
 
