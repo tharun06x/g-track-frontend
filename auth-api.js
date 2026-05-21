@@ -20,6 +20,7 @@
       headers: getHeaders(options.token),
       body: options.body ? JSON.stringify(options.body) : undefined,
       cache: "no-store",  // always fetch fresh — never return cached response
+      credentials: options.token ? "include" : "omit", // only send credentials when token present
     });
 
     const raw = await response.text();
