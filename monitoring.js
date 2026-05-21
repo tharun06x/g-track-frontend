@@ -60,6 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
     ratingDot: document.getElementById('consumption-dot'),
     trendChart: document.getElementById('consumption-trend-chart'),
     activityTimeline: document.getElementById('activity-timeline-list'),
+    sensorLastUpdate: document.getElementById('sensor-last-update'),
+    frontendLastFetch: document.getElementById('frontend-last-fetch'),
   };
 
   const pathLength = 251.3;
@@ -313,6 +315,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       updateGauge(currentWeight, userCapacityKg);
       updateDaysRemaining(summary?.predicted_empty_date, currentWeight, overview);
+
+      // Update timestamps
+      if (elements.frontendLastFetch) {
+        elements.frontendLastFetch.textContent = `Fetched: ${new Date().toLocaleTimeString()}`;
+      }
+      if (elements.sensorLastUpdate && weightData?.last_update) {
+        const sensorTime = new Date(weightData.last_update);
+        elements.sensorLastUpdate.textContent = `Sensor: ${sensorTime.toLocaleTimeString()}`;
+      }
       updateSyntheticMeta(overview);
       updateConsumptionRating(
         Number(summary?.gas_used_today || 0),
