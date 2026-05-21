@@ -33,9 +33,35 @@
     }
 
     if (!response.ok) {
-      const message = (data && (data.detail || data.message || data.error))
-        ? (data.detail || data.message || data.error)
-        : `Request failed (${response.status})`;
+      let message = `Request failed (${response.status})`;
+
+      if (data) {
+        const detail = data.detail || data.message || data.error;
+        if (typeof detail === "string") {
+          message = detail;
+        } else if (Array.isArray(detail)) {
+          const parts = detail
+            .map((item) => {
+              if (!item) {
+                return "";
+              }
+              if (typeof item === "string") {
+                return item;
+              }
+              if (item.msg) {
+                return item.msg;
+              }
+              return JSON.stringify(item);
+            })
+            .filter(Boolean);
+          if (parts.length) {
+            message = parts.join("; ");
+          }
+        } else if (detail && typeof detail === "object") {
+          message = JSON.stringify(detail);
+        }
+      }
+
       throw new Error(message);
     }
 
