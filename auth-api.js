@@ -19,6 +19,7 @@
       method: options.method || "GET",
       headers: getHeaders(options.token),
       body: options.body ? JSON.stringify(options.body) : undefined,
+      cache: "no-store",  // always fetch fresh — never return cached response
     });
 
     const raw = await response.text();
