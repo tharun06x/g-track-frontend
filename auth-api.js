@@ -49,6 +49,9 @@
                 return item;
               }
               if (item.msg) {
+                if (Array.isArray(item.loc) && item.loc.length) {
+                  return `${item.loc.join('.')}: ${item.msg}`;
+                }
                 return item.msg;
               }
               return JSON.stringify(item);
