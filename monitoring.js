@@ -372,10 +372,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadMonitoringData();
 
-  // Auto-refresh monitoring data every 2 seconds
+  // Auto-refresh monitoring data every 5 seconds
   let refreshInterval = setInterval(() => {
     loadMonitoringData();
-  }, 2000); // Refresh every 2 seconds
+  }, 5000);
 
   // Optional: Add manual refresh button functionality
   const refreshBtn = document.querySelector('[data-refresh="monitoring"]');
