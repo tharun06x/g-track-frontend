@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const pathLength = 251.3;
-  let maxCapacityKg = 14; // default, overridden by user's gas field
+  let maxCapacityKg = 5; // hardcoded max for testing (5 kg cylinder)
 
   function updateGauge(weightKg, capacityKg) {
     const cap = Number(capacityKg) > 0 ? Number(capacityKg) : maxCapacityKg;
@@ -361,10 +361,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadMonitoringData();
 
-  // Auto-refresh monitoring data every 5 seconds
+  // Auto-refresh monitoring data every 2 seconds
   let refreshInterval = setInterval(() => {
     loadMonitoringData();
-  }, 5000); // Refresh every 5 seconds
+  }, 2000); // Refresh every 2 seconds
 
   // Optional: Add manual refresh button functionality
   const refreshBtn = document.querySelector('[data-refresh="monitoring"]');
