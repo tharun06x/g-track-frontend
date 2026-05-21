@@ -63,11 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const pathLength = 251.3;
-  const maxCapacityKg = 14;
+  let maxCapacityKg = 14; // default, overridden by user's gas field
 
-  function updateGauge(weightKg) {
+  function updateGauge(weightKg, capacityKg) {
+    const cap = Number(capacityKg) > 0 ? Number(capacityKg) : maxCapacityKg;
     const safeWeight = Math.max(0, Number(weightKg) || 0);
-    const percent = Math.max(0, Math.min(100, Math.round((safeWeight / maxCapacityKg) * 100)));
+    const percent = Math.max(0, Math.min(100, Math.round((safeWeight / cap) * 100)));
 
     elements.gasWeight.textContent = `${safeWeight.toFixed(2)} kg`;
     elements.gasPercent.textContent = `${percent}%`;
@@ -307,8 +308,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const currentWeight = Number(weightData?.remaining_weight || summary?.remaining_gas || 0);
       const featureDailyUsage = Number(overview?.latest_feature?.consumption_per_day);
+      const userCapacityKg = Number(me.gas) > 0 ? Number(me.gas) : 14;
+      maxCapacityKg = userCapacityKg; // update global so other calls use correct capacity
 
-      updateGauge(currentWeight);
+      updateGauge(currentWeight, userCapacityKg);
       updateDaysRemaining(summary?.predicted_empty_date, currentWeight, overview);
       updateSyntheticMeta(overview);
       updateConsumptionRating(
