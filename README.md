@@ -1,3 +1,19 @@
+The G-Track Smart Gas Monitoring System is an IoT-based solution designed to monitor gas
+cylinder weight in real time and detect low-gas conditions automatically, eliminating the need for
+manual checking. The system uses load cell sensors with ESP32 to collect data and transmits
+it to a centralized platform, where it is securely stored in a PostgreSQL database for efficient
+data management, real-time tracking, and historical analysis. The system also provides a webbased
+interface that allows users to receive timely alerts and place refill booking requests, which
+are managed by distributors for faster and more efficient service delivery. In addition to realtime
+monitoring, G-Track incorporates a Linear Regression model to analyze gas consumption
+patterns and predict the estimated number of days remaining before gas depletion, helping users
+plan refills in advance. Furthermore, a K-Means clustering algorithm is used to classify users into
+light, normal, and heavy usage categories based on consumption behavior. This enables better
+understanding of usage patterns, such as lower consumption for students and higher usage in
+family households, supporting improved resource planning. By integrating real-time monitoring,
+secure data storage, predictive analytics, user classification, and an efficient booking mechanism,
+G-Track enhances user convenience and ensures reliable and intelligent gas management.
+
 Frontend Technologies Used
 
 The frontend of the G-Track Gas Monitoring System was developed using HTML5, CSS, and JavaScript to create an interactive, responsive, and user-friendly web application for real-time gas monitoring and management.
