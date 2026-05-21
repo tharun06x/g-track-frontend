@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const activeDeviceCountEl = document.getElementById('dashboard-active-device-count');
   const activeDeviceLabelEl = document.getElementById('dashboard-active-device-label');
   const totalDaysEl = document.getElementById('dashboard-total-days');
+  const usageChartContainer = document.getElementById('dashboard-usage-chart');
+  const usageMonthText = document.getElementById('usage-month');
 
   const MAX_CYLINDER_WEIGHT = 14;
 
@@ -111,6 +113,72 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (Array.isArray(refillHistory) && totalDaysEl) {
       totalDaysEl.textContent = String(refillHistory.length);
     }
+
+    if (hasDevice && usageChartContainer) {
+      try {
+        const now = new Date();
+        if (usageMonthText) {
+           usageMonthText.textContent = now.toLocaleDateString('en-US', { month: 'long' });
+        }
+        
+        // Fetch daily usage stats for the current year
+        const stats = await window.GTrackApi.request(
+          `/api/v1/reports/gas-usage/stats?device_id=${encodeURIComponent(me.device_id)}&granularity=daily&year=${now.getFullYear()}`,
+          { method: 'GET' }
+        );
+
+        if (Array.isArray(stats) && stats.length > 0) {
+          // Filter stats to only show the current month
+          const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
+          const currentYearStr = String(now.getFullYear());
+          const prefix = `${currentYearStr}-${currentMonth}-`;
+          
+          let monthData = stats.filter(s => s.period.startsWith(prefix));
+          
+          if (monthData.length === 0) {
+            // fallback to last 30 days if no data this month
+            monthData = stats.slice(-30);
+          }
+
+          const maxUsage = Math.max(...monthData.map(s => Number(s.usage) || 0), 0.1);
+          
+          usageChartContainer.innerHTML = monthData.map((s, idx) => {
+            const usage = Number(s.usage) || 0;
+            const heightPct = Math.max(5, Math.min(100, Math.round((usage / maxUsage) * 100)));
+            const dateStr = s.period; // e.g. "2026-05-21"
+            const dayNum = parseInt(dateStr.split('-')[2], 10);
+            
+            let barColorClass = "bar-green";
+            if (heightPct > 80) barColorClass = "bar-red";
+            else if (heightPct > 50) barColorClass = "bar-yellow";
+            
+            const isToday = (dayNum === now.getDate() && dateStr.startsWith(prefix));
+            const liveId = isToday ? 'id="live-bar-fill"' : '';
+            const liveColId = isToday ? 'id="live-bar-col"' : '';
+            
+            return `<div class="bar-col" ${liveColId} data-tooltip="Day ${dayNum} • ${usage.toFixed(2)} kg">
+              <div ${liveId} class="bar ${barColorClass}" style="height: ${heightPct}%; transition: height 0.5s ease-out, background-color 0.5s ease;"></div>
+            </div>`;
+          }).join('');
+          
+          // Add future cols to pad it out to ~30 if needed (looks better)
+          const paddingCount = 30 - monthData.length;
+          if (paddingCount > 0) {
+             let padHtml = "";
+             for(let i=0; i<paddingCount; i++) {
+                padHtml += `<div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>`;
+             }
+             usageChartContainer.innerHTML += padHtml;
+          }
+
+        } else {
+          usageChartContainer.innerHTML = '<div style="color: var(--text-secondary); width: 100%; text-align: center; padding-top: 40px;">No usage data available</div>';
+        }
+      } catch (err) {
+        console.warn('Failed to load usage stats for dashboard chart', err);
+      }
+    }
+
   } catch (error) {
     setStatusFallback(`API error: ${error.message}`);
   }

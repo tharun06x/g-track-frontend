@@ -43,10 +43,10 @@
             <span style="display: flex; align-items: center; gap: 6px;">
               <span class="live-dot pulse"></span> Real-time Gas Weight
             </span>
-            <span id="gas-weight-value">124.5 kg</span>
+            <span id="gas-weight-value">-- kg</span>
           </div>
           <div class="progress-bar-bg">
-            <div id="gas-weight-fill" class="progress-bar-fill" style="width: 62%; transition: width 0.5s ease-out, background-color 0.5s ease;"></div>
+            <div id="gas-weight-fill" class="progress-bar-fill" style="width: 0%; transition: width 0.5s ease-out, background-color 0.5s ease;"></div>
           </div>
         </div>
         
@@ -72,38 +72,8 @@
         
         <div class="usage-body">
           <div class="graph-area">
-            <div class="bar-container">
-              <!-- 30 bars for 30 days of April -->
-              <div class="bar-col" data-tooltip="Apr 1 • ▼ 12%"><div class="bar bar-green" style="height: 25%;"></div></div>
-              <div class="bar-col" data-tooltip="Apr 2 • ▼ 5%"><div class="bar bar-green" style="height: 38%;"></div></div>
-              <div class="bar-col" data-tooltip="Apr 3 • ▲ 22%"><div class="bar bar-red" style="height: 65%;"></div></div>
-              <div class="bar-col" id="live-bar-col" data-tooltip="Apr 4 • Live"><div id="live-bar-fill" class="bar bar-red" style="height: 72%; transition: height 0.5s ease-out, background-color 0.5s ease;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
-              <div class="bar-col future-col"><div class="bar bar-future" style="height: 50%;"></div></div>
+            <div class="bar-container" id="dashboard-usage-chart">
+              <!-- Bars will be populated dynamically -->
             </div>
           </div>
         </div>
